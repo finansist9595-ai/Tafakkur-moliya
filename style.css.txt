@@ -1,0 +1,530 @@
+/* ================================================ */
+/* UMUMIY SOZLAMALAR - Hamma elementlarga tegishli  */
+/* ================================================ */
+
+/* Barcha elementlardan standart bo'shliq va chegara olib tashlanadi */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Asosiy sahifa uslubi */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f4f8;
+    color: #1a1a2e;
+    min-height: 100vh;
+}
+
+/* Asosiy wrapper */
+#app {
+    max-width: 480px;
+    margin: 0 auto;
+    min-height: 100vh;
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* ================================================ */
+/* HEADER - Yuqori sarlavha qismi                   */
+/* ================================================ */
+
+#main-header {
+    background: linear-gradient(135deg, #1b4332, #2d6a4f);
+    color: #ffffff;
+    text-align: center;
+    padding: 20px 16px 16px 16px;
+}
+
+#main-header h1 {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+}
+
+#main-header p {
+    font-size: 13px;
+    color: #b7e4c7;
+    font-weight: 400;
+}
+
+
+/* ================================================ */
+/* TAB NAVIGATSIYA - 3 ta bo'lim tugmalari          */
+/* ================================================ */
+
+#tab-navigation {
+    display: flex;
+    background-color: #ffffff;
+    border-bottom: 2px solid #e8f5e9;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+/* Har bir tab tugmasi */
+.tab-button {
+    flex: 1;
+    padding: 12px 4px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #6b7280;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all 0.25s ease;
+}
+
+/* Tab tugmasiga sichqon olib borilganda */
+.tab-button:hover {
+    color: #2d6a4f;
+    background-color: #f0faf4;
+}
+
+/* Faol (tanlangan) tab tugmasi */
+.tab-button.active {
+    color: #1b4332;
+    border-bottom: 3px solid #2d6a4f;
+    background-color: #f0faf4;
+}
+
+
+/* ================================================ */
+/* TAB CONTENT - Bo'limlar mazmuni                  */
+/* ================================================ */
+
+#tab-content-area {
+    flex: 1;
+    padding: 16px;
+}
+
+/* Har bir bo'lim (section) — standart holda yashirin */
+.tab-section {
+    display: none;
+}
+
+/* Faol bo'lim — ko'rinadi */
+.tab-section.active-section {
+    display: block;
+}
+
+/* Bo'lim sarlavhasi */
+.tab-section h2 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1b4332;
+    margin-bottom: 12px;
+    margin-top: 8px;
+}
+
+/* Bo'lim tavsifi (kichik izoh matni) */
+.section-tavsif {
+    font-size: 14px;
+    color: #6b7280;
+    margin-bottom: 16px;
+    line-height: 1.5;
+}
+
+
+/* ================================================ */
+/* CARD - Oq qutichalar                             */
+/* ================================================ */
+
+.card {
+    background-color: #ffffff;
+    border: 1px solid #e8f5e9;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 14px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.card h3 {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1b4332;
+    margin-bottom: 10px;
+}
+
+.card p {
+    font-size: 14px;
+    color: #374151;
+    line-height: 1.6;
+}
+
+
+/* ================================================ */
+/* TA'LIM BO'LIMI - Dars va test                    */
+/* ================================================ */
+
+/* Dars sarlavhasi */
+#dars-sarlavha {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1b4332;
+    margin-bottom: 8px;
+}
+
+/* Dars matni */
+#dars-matni {
+    font-size: 14px;
+    color: #374151;
+    line-height: 1.7;
+}
+
+/* Test bo'limi sarlavhasi */
+#test-container h2 {
+    font-size: 17px;
+    margin-top: 20px;
+}
+
+/* Test savol matni */
+#test-savol-matni {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1a1a2e;
+    line-height: 1.5;
+}
+
+/* Test javob tugmalari wrapper */
+#test-javoblar {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 12px;
+    margin-bottom: 12px;
+}
+
+/* Har bir javob tugmasi */
+.javob-tugma {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #1b4332;
+    background-color: #f0faf4;
+    border: 2px solid #b7e4c7;
+    border-radius: 10px;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s ease;
+}
+
+.javob-tugma:hover {
+    background-color: #d8f3dc;
+    border-color: #2d6a4f;
+}
+
+/* To'g'ri javob bosilganda yashil bo'ladi */
+.javob-tugma.togri {
+    background-color: #d1fae5;
+    border-color: #10b981;
+    color: #065f46;
+}
+
+/* Noto'g'ri javob bosilganda qizil bo'ladi */
+.javob-tugma.notogri {
+    background-color: #fee2e2;
+    border-color: #ef4444;
+    color: #991b1b;
+}
+
+/* Test natijasi matni */
+#test-natija {
+    padding: 12px 16px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+#test-natija.togri-natija {
+    background-color: #d1fae5;
+    color: #065f46;
+    border: 1px solid #10b981;
+}
+
+#test-natija.notogri-natija {
+    background-color: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #ef4444;
+}
+
+/* Ball ko'rsatadigan karta */
+.ball-card {
+    text-align: center;
+    background: linear-gradient(135deg, #f0faf4, #d8f3dc);
+}
+
+.ball-card p {
+    font-size: 13px;
+    color: #6b7280;
+    margin-bottom: 4px;
+}
+
+/* Katta ball raqami */
+#joriy-bal {
+    font-size: 42px;
+    font-weight: 800;
+    color: #1b4332;
+}
+
+.ball-card span:last-child {
+    font-size: 16px;
+    color: #2d6a4f;
+    font-weight: 600;
+}
+
+/* Keyingi savol tugmasi */
+#keyingi-savol-btn {
+    width: 100%;
+    padding: 13px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #ffffff;
+    background: linear-gradient(135deg, #1b4332, #2d6a4f);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-bottom: 16px;
+    transition: opacity 0.2s ease;
+}
+
+#keyingi-savol-btn:hover {
+    opacity: 0.88;
+}
+
+
+/* ================================================ */
+/* REYTING BO'LIMI                                  */
+/* ================================================ */
+
+/* Reyting ro'yxati wrapper */
+#reyting-royxati {
+    margin-bottom: 16px;
+}
+
+/* Bitta reyting qatori */
+.reyting-qatori {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    background-color: #ffffff;
+    border: 1px solid #e8f5e9;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* O'rin raqami (1, 2, 3...) */
+.reyting-orn {
+    font-size: 16px;
+    font-weight: 800;
+    color: #6b7280;
+    width: 32px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+/* Birinchi 3 o'rin maxsus ranglarda */
+.reyting-orn.birinchi  { color: #f59e0b; font-size: 20px; }
+.reyting-orn.ikkinchi  { color: #9ca3af; font-size: 18px; }
+.reyting-orn.uchinchi  { color: #cd7c2f; font-size: 18px; }
+
+/* Foydalanuvchi ismi */
+.reyting-ism {
+    flex: 1;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1a1a2e;
+    margin-left: 10px;
+}
+
+/* Ball */
+.reyting-ball {
+    font-size: 14px;
+    font-weight: 700;
+    color: #2d6a4f;
+    background-color: #f0faf4;
+    padding: 4px 10px;
+    border-radius: 20px;
+}
+
+/* "Mening o'rnim" kartasi */
+.mening-ornim-card {
+    background: linear-gradient(135deg, #f0faf4, #d8f3dc);
+}
+
+.mening-ornim-card p {
+    font-size: 14px;
+    color: #374151;
+    margin-bottom: 6px;
+    line-height: 1.5;
+}
+
+
+/* ================================================ */
+/* DO'STLAR BO'LIMI - Referal                       */
+/* ================================================ */
+
+/* Referal karta */
+.referal-card {
+    background: linear-gradient(135deg, #f0faf4, #e8f5e9);
+}
+
+/* Referal havola input maydoni */
+.referal-input {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 13px;
+    color: #374151;
+    background-color: #ffffff;
+    border: 1px solid #b7e4c7;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    outline: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Tugmalar — umumiy uslub */
+#nusxalash-btn,
+#ulashish-btn {
+    width: 100%;
+    padding: 12px;
+    font-size: 14px;
+    font-weight: 700;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-bottom: 10px;
+    transition: opacity 0.2s ease;
+}
+
+/* Nusxalash tugmasi */
+#nusxalash-btn {
+    background-color: #e8f5e9;
+    color: #1b4332;
+    border: 2px solid #b7e4c7;
+}
+
+#nusxalash-btn:hover {
+    background-color: #d8f3dc;
+}
+
+/* Ulashish tugmasi */
+#ulashish-btn {
+    background: linear-gradient(135deg, #1b4332, #2d6a4f);
+    color: #ffffff;
+}
+
+#ulashish-btn:hover {
+    opacity: 0.88;
+}
+
+/* "Nusxalandi!" xabari */
+#nusxalandi-xabar {
+    font-size: 13px;
+    font-weight: 600;
+    color: #10b981;
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+/* Statistika kartasi */
+.statistika-card {
+    margin-top: 4px;
+}
+
+/* Statistika qatori */
+.statistika-qator {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #e8f5e9;
+    font-size: 14px;
+    color: #374151;
+}
+
+.statistika-qator:last-child {
+    border-bottom: none;
+}
+
+.statistika-qator strong {
+    font-size: 16px;
+    color: #1b4332;
+}
+
+/* Do'stlar ro'yxati sarlavhasi */
+#dostlar-royxati-container h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1b4332;
+    margin-bottom: 10px;
+    margin-top: 6px;
+}
+
+/* Bitta do'st qatori */
+.dost-qatori {
+    display: flex;
+    align-items: center;
+    padding: 10px 14px;
+    background-color: #ffffff;
+    border: 1px solid #e8f5e9;
+    border-radius: 10px;
+    margin-bottom: 8px;
+}
+
+.dost-avatar {
+    font-size: 24px;
+    margin-right: 12px;
+}
+
+.dost-ism {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1a1a2e;
+    flex: 1;
+}
+
+.dost-ball {
+    font-size: 13px;
+    color: #2d6a4f;
+    font-weight: 700;
+}
+
+
+/* ================================================ */
+/* YASHIRIN ELEMENT - .hidden klassi                */
+/* ================================================ */
+
+.hidden {
+    display: none;
+}
+
+
+/* ================================================ */
+/* TELEFON EKRANLARIGA MOSLIK                       */
+/* ================================================ */
+
+@media (max-width: 360px) {
+    #main-header h1 {
+        font-size: 19px;
+    }
+
+    .tab-button {
+        font-size: 11px;
+        padding: 10px 2px;
+    }
+
+    #joriy-bal {
+        font-size: 36px;
+    }
+}
