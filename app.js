@@ -1,501 +1,650 @@
-// ================================================
-// APP.JS — TAFAKKUR MOLIYA
-// Barcha mantiq shu faylda
-// ================================================
+// ====================================================
+// TAFAKKUR MOLIYA — APP.JS
+// Ilovaning barcha funksiyalari shu yerda
+// ====================================================
 
 
-// ================================================
-// 1. TELEGRAM MINI APP — ISHGA TUSHIRISH
-// ================================================
+// ====================================================
+// 1-QISM: TELEGRAM WEB APP ULANISHI
+// ====================================================
 
 // Telegram ob'ektini olamiz
 const tg = window.Telegram.WebApp;
 
-// Ilovani to'liq ekranga ochish
+// Ilovani to'liq ekranga yoyamiz
 tg.expand();
 
-// Telegram mavzusiga mos rang o'rnatish
-tg.setHeaderColor('#1b4332');
+// Telegram ga ilova tayyor ekanligini bildirамiz
+tg.ready();
 
+// Telegram tema ranglarini olamiz
+// Agar Telegram rangi bo'lmasa, o'zimizning yashil rangimiz ishlatiladi
+const tgRang      = tg.themeParams.button_color      || '#1b4332';
+const tgMatnRang  = tg.themeParams.button_text_color || '#ffffff';
 
-// ================================================
-// 2. FOYDALANUVCHI MA'LUMOTLARI
-// ================================================
+// Foydalanuvchi ma'lumotlarini Telegram dan olamiz
+let foydalanuvchiIsmi = 'Mehmon';
+let foydalanuvchiId   = 0;
 
-// Telegram dan foydalanuvchi ma'lumotini olamiz
-// Agar Telegram dan ochilmasa, sinov ma'lumotlari ishlatiladi
-let foydalanuvchi = {
-    id: 0,
-    ism: 'Mehmon',
-    bal: 0,
-    referalSoni: 0
-};
-
-// Telegram foydalanuvchi ma'lumotini yuklash
 if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-    foydalanuvchi.id = tg.initDataUnsafe.user.id;
-    foydalanuvchi.ism = tg.initDataUnsafe.user.first_name || 'Foydalanuvchi';
+    foydalanuvchiIsmi = tg.initDataUnsafe.user.first_name || 'Mehmon';
+    foydalanuvchiId   = tg.initDataUnsafe.user.id || 0;
 }
 
-// LocalStorage dan saqlangan ballarni yuklaymiz
-function ballarniYukla() {
-    const saqlangan = localStorage.getItem('tafakkur_bal_' + foydalanuvchi.id);
-    if (saqlangan) {
-        foydalanuvchi.bal = parseInt(saqlangan);
+
+// ====================================================
+// 2-QISM: FOYDALANUVCHI BALLARI (LocalStorage)
+// ====================================================
+
+// Foydalanuvchi balini LocalStorage dan yuklaymiz
+// LocalStorage — bu brauzer ichidagi kichik xotira
+function balniYukla() {
+    const saqlangan = localStorage.getItem('tafakkur_bal_' + foydalanuvchiId);
+    if (saqlangan !== null) {
+        return parseInt(saqlangan);
     }
-    const referalSaqlangan = localStorage.getItem('tafakkur_referal_' + foydalanuvchi.id);
-    if (referalSaqlangan) {
-        foydalanuvchi.referalSoni = parseInt(referalSaqlangan);
-    }
+    return 0; // Birinchi marta kirsa, 0 ball
 }
 
 // Ballarni LocalStorage ga saqlaymiz
-function ballarniSaqla() {
-    localStorage.setItem('tafakkur_bal_' + foydalanuvchi.id, foydalanuvchi.bal);
-    localStorage.setItem('tafakkur_referal_' + foydalanuvchi.id, foydalanuvchi.referalSoni);
+function balniSaqla(bal) {
+    localStorage.setItem('tafakkur_bal_' + foydalanuvchiId, bal);
 }
 
+// Joriy foydalanuvchi bali
+let joriyBal = balniYukla();
 
-// ================================================
-// 3. DARSLAR MA'LUMOTLARI
-// ================================================
 
-// Darslar ro'yxati — keyinchalik ko'proq qo'shishingiz mumkin
+// ====================================================
+// 3-QISM: DARSLAR MA'LUMOTLARI
+// 3 ta mavzu, har birida 3 ta test — jami 9 ta test
+// ====================================================
+
 const darslar = [
+
+    // --------------------------------------------------
+    // 1-DARS: ISLOM MOLIYASI ASOSLARI
+    // --------------------------------------------------
     {
         id: 1,
-        sarlavha: "Ribo (Foiz) nima?",
-        matn: "Ribo — bu qarz berish yoki olishda belgilangan qo'shimcha to'lov (foiz) hisoblanadi. Islom moliyasida ribo qat'iyan man etilgan. Chunki u adolatsizlikka olib keladi: kuchli tomonlar kuchsizlardan foyda ko'radi. Quron karimda: 'Aloh ribodan kelgan daromadni yo'q qiladi, sadaqalarni esa ko'paytiradi' (2:276) deyilgan."
+        mavzu: 'Islom Moliyasi Asoslari',
+        emoji: '📖',
+        matn: `Islom moliyasi — bu Islom shariatiga asoslangan moliyaviy tizim. Uning asosiy tamoyillari:
+
+- Ribo (foiz) man etilgan
+- Foyda va zarar birgalikda taqsimlanadi
+- Haqiqiy tovar yoki xizmatga asoslanishi shart
+- Zararli sohalarga (spirt, qimor) sarmoya kiritish taqiqlangan
+
+Islom moliyasi dunyoda tez rivojlanmoqda — hozirda 3 trillion dollardan ortiq aktivni boshqaradi.`,
+
+        testlar: [
+            {
+                savol: "Islom moliyasining asosiy taqiqlangan elementi qaysi?",
+                javoblar: [
+                    "Savdo qilish",
+                    "Ribo (foiz)",
+                    "Sarmoya kiritish",
+                    "Sherikchilik"
+                ],
+                togri: 1  // 0 dan boshlanadi, ya'ni 2-javob to'g'ri
+            },
+            {
+                savol: "Islom moliyasida foyda va zarar kimlar o'rtasida taqsimlanadi?",
+                javoblar: [
+                    "Faqat bank oladi",
+                    "Faqat mijoz ko'radi",
+                    "Barcha sheriklar birgalikda",
+                    "Davlat oladi"
+                ],
+                togri: 2
+            },
+            {
+                savol: "Islom moliyasi dunyoda necha trillion dollarlik aktivni boshqaradi?",
+                javoblar: [
+                    "1 trillion",
+                    "5 trillion",
+                    "3 trillion",
+                    "10 trillion"
+                ],
+                togri: 2
+            }
+        ]
     },
+
+    // --------------------------------------------------
+    // 2-DARS: RIBO (FOIZ)
+    // --------------------------------------------------
     {
         id: 2,
-        sarlavha: "Murabaha nima?",
-        matn: "Murabaha — bu Islom moliyasidagi savdo shartnomasi turi. Bunda bank yoki moliya muassasasi tovarni sotib oladi va uni mijozga muayyan foyda (margin) bilan sotadi. Foiz yo'q — faqat savdo foydasi bor. Masalan: bank 10 mln so'mlik mashina sotib olib, uni 12 mln so'mga qismlarga bo'lib sotadi."
+        mavzu: 'Ribo — Foizning Islomiy Hukmи',
+        emoji: '🚫',
+        matn: `Ribo — bu qarz berish yoki olishda olinadigan belgilangan qo'shimcha to'lov. Islomda qat'iyan taqiqlangan.
+
+Nega taqiqlangan?
+- Adolatsizlik: kuchsiz odamdan foiz olish uni yanada kambag'allashtiradi
+- Mehnat yo'q: pul "o'z-o'zidan" ko'payishi noto'g'ri
+- Xavf yo'q: bank har doim yutadi, mijoz yo'qotishi mumkin
+
+Quron (2:275): "Alloh savdoni halol, riboni harom qildi."
+
+Islom moliyasida foiz o'rniga — savdo foydasi, ijara haqi yoki sherikchilik foydasi ishlatiladi.`,
+
+        testlar: [
+            {
+                savol: "Ribo nima?",
+                javoblar: [
+                    "Islomiy savdo shartnomasi",
+                    "Qarzga belgilangan foiz to'lov",
+                    "Zakat to'lovi",
+                    "Sug'urta turi"
+                ],
+                togri: 1
+            },
+            {
+                savol: "Islomda ribo taqiqlangan asosiy sabab nima?",
+                javoblar: [
+                    "Davlat soliqlarini kamaytiradi",
+                    "Inflyatsiyani oshiradi",
+                    "Adolatsizlikka va ekspluatatsiyaga olib keladi",
+                    "Savdoni kamaytiradi"
+                ],
+                togri: 2
+            },
+            {
+                savol: "Islom moliyasida foiz o'rniga nima ishlatiladi?",
+                javoblar: [
+                    "Jarima to'lovlari",
+                    "Davlat subsidiyalari",
+                    "Savdo foydasi yoki sherikchilik daromadi",
+                    "Valyuta almashinuvi"
+                ],
+                togri: 2
+            }
+        ]
     },
+
+    // --------------------------------------------------
+    // 3-DARS: MURABAHA
+    // --------------------------------------------------
     {
         id: 3,
-        sarlavha: "Zakat nima?",
-        matn: "Zakat — Islomning besh asosiy ustunidan biri. Bu mol-mulkning majburiy tozalanishi hisoblanadi. Nisob (minimal chegara) ga yetgan har bir musulmon yiliga bir marta o'z boyligining 2.5 foizini zakatga berishi shart. Zakat — bu sadaqa emas, balki faqirlarning boylarga nisbatan huquqi."
-    },
-    {
-        id: 4,
-        sarlavha: "Mushoraka nima?",
-        matn: "Mushoraka — bu Islom moliyasidagi sherikchilik shartnomasi. Ikki yoki undan ortiq tomon birgalikda biznesga sarmoya kiritadi va foyda hamda zararni kelishilgan nisbatda taqsimlaydi. Bu oddiy bank kreditidan farqli — bank ham xavfni o'z zimmasiga oladi."
-    },
-    {
-        id: 5,
-        sarlavha: "Takaful nima?",
-        matn: "Takaful — Islom sug'urtasi. Oddiy sug'urtadan farqi: ishtirokchilar o'zaro yordam uchun jamg'arma hosil qiladi. Agar birovga zarar yetsa, jamg'armadan qoplanadi. Kompaniya faqat boshqaruv xizmati uchun haq oladi. Shu tarzda ribo va garar (noaniqlik) dan qochiladi."
+        mavzu: 'Murabaha — Islomiy Kreditlash',
+        emoji: '🤝',
+        matn: `Murabaha — bu Islom moliyasidagi eng keng tarqalgan shartnoma turi.
+
+Qanday ishlaydi?
+1. Mijoz bankdan mashina yoki uy olmoqchi
+2. Bank o'sha tovarni sotuvchidan sotib oladi
+3. Bank tovarni mijozga belgilangan foyda bilan sotadi
+4. Mijoz to'lovni qismlarga bo'lib to'laydi
+
+Misol:
+- Mashina narxi: 100 mln so'm
+- Bank foydasi: 20 mln so'm (oldindan belgilangan)
+- Mijoz jami to'laydi: 120 mln so'm — lekin bu foiz emas, savdo narxi!
+
+Oddiy kreditdan farqi: foiz har oy o'zgarmaydi, narx boshidanoq aniq belgilanadi.`,
+
+        testlar: [
+            {
+                savol: "Murabahada bank avval nima qiladi?",
+                javoblar: [
+                    "Mijozga naqd pul beradi",
+                    "Tovarni o'zi sotib oladi",
+                    "Kafolat beradi",
+                    "Sug'urta tuzadi"
+                ],
+                togri: 1
+            },
+            {
+                savol: "Murabahada narx qachon belgilanadi?",
+                javoblar: [
+                    "Har oy qayta hisoblanadi",
+                    "Oxirida aniqlanadi",
+                    "Shartnoma tuzilganda boshidanoq",
+                    "Bank xohlagan vaqtda"
+                ],
+                togri: 2
+            },
+            {
+                savol: "Murabaha oddiy kreditdan asosiy farqi nima?",
+                javoblar: [
+                    "Murabaha bepul",
+                    "Bank tovarni sotib olib, savdo sifatida beradi — foiz emas",
+                    "Faqat boy odamlar uchun",
+                    "Davlat kafolati bor"
+                ],
+                togri: 1
+            }
+        ]
     }
-];
 
-// Hozirgi dars indeksi
-let joriyDarsIndeksi = 0;
-
-// LocalStorage dan oxirgi o'qilgan darsni yuklaymiz
-function darsIndeksiniYukla() {
-    const saqlangan = localStorage.getItem('tafakkur_dars_' + foydalanuvchi.id);
-    if (saqlangan) {
-        joriyDarsIndeksi = parseInt(saqlangan);
-        // Agar indeks darslar sonidan oshib ketsa, 0 ga qaytaramiz
-        if (joriyDarsIndeksi >= darslar.length) {
-            joriyDarsIndeksi = 0;
-        }
-    }
-}
+]; // darslar massivi tugadi
 
 
-// ================================================
-// 4. TEST SAVOLLARI MA'LUMOTLARI
-// ================================================
+// ====================================================
+// 4-QISM: HOLAT O'ZGARUVCHILARI
+// (Ilovaning hozirgi holati)
+// ====================================================
 
-// Har bir darsga mos test savollari
-const testlar = [
-    {
-        darsId: 1,
-        savol: "Islom moliyasida ribo nima?",
-        javoblar: [
-            "Qarz berish va olishda belgilangan foiz to'lov",
-            "Savdo kelishuvi turi",
-            "Islomiy sug'urta",
-            "Zakat to'lovi"
-        ],
-        togriJavobIndeksi: 0
-    },
-    {
-        darsId: 2,
-        savol: "Murabaha qanday ishlaydi?",
-        javoblar: [
-            "Bank foiz bilan qarz beradi",
-            "Bank tovarni sotib olib, foyda bilan mijozga sotadi",
-            "Ikki tomon birgalikda sarmoya kiritadi",
-            "Faqirlar uchun yordam jamg'armasi"
-        ],
-        togriJavobIndeksi: 1
-    },
-    {
-        darsId: 3,
-        savol: "Zakat necha foiz hisoblanadi?",
-        javoblar: [
-            "5 foiz",
-            "10 foiz",
-            "2.5 foiz",
-            "1 foiz"
-        ],
-        togriJavobIndeksi: 2
-    },
-    {
-        darsId: 4,
-        savol: "Mushorakada kim xavfni o'z zimmasiga oladi?",
-        javoblar: [
-            "Faqat mijoz",
-            "Faqat bank",
-            "Hukumat",
-            "Barcha sheriklar birgalikda"
-        ],
-        togriJavobIndeksi: 3
-    },
-    {
-        darsId: 5,
-        savol: "Takaful qanday Islomiy sug'urta prinsipi asosida ishlaydi?",
-        javoblar: [
-            "Kompaniya foyda olish uchun sarmoya kiritadi",
-            "Ishtirokchilar o'zaro yordam jamg'armasini hosil qiladi",
-            "Davlat kafolat beradi",
-            "Foiz asosida ishlaydi"
-        ],
-        togriJavobIndeksi: 1
-    }
-];
-
-// Joriy test holati
-let joriyTestIndeksi = 0;
-let javobBerildi = false;
+let joriyDarsIndeksi  = 0;   // Qaysi dars ko'rsatilmoqda (0, 1, 2)
+let joriyTestIndeksi  = 0;   // Qaysi test ko'rsatilmoqda (0, 1, 2)
+let javobBerildi      = false; // Test javob berilganmi?
+let darsOqildi        = false; // Dars o'qildi tugmasi bosildimi?
 
 
-// ================================================
-// 5. REYTING MA'LUMOTLARI (Namuna)
-// ================================================
-
-// Haqiqiy loyihada bu server dan keladi
-// Hozir namuna ma'lumotlar ishlatiladi
-let reytingMalumotlari = [
-    { ism: "Abdulloh T.",  bal: 150 },
-    { ism: "Zulfiya M.",   bal: 130 },
-    { ism: "Sardor K.",    bal: 115 },
-    { ism: "Nilufar R.",   bal: 95  },
-    { ism: "Bobur A.",     bal: 80  },
-    { ism: "Kamola S.",    bal: 70  },
-    { ism: "Jasur N.",     bal: 55  },
-    { ism: "Madina O.",    bal: 40  },
-    { ism: "Sherzod B.",   bal: 30  },
-    { ism: "Hulkar Y.",    bal: 20  }
-];
-
-
-// ================================================
-// 6. TAB (BO'LIM) ALMASHTIRISH FUNKSIYASI
-// ================================================
+// ====================================================
+// 5-QISM: TAB (PASTKI MENYU) FUNKSIYASI
+// ====================================================
 
 function showTab(tabNomi) {
 
     // Barcha bo'limlarni yashiramiz
-    const barcha_sectionlar = document.querySelectorAll('.tab-section');
-    barcha_sectionlar.forEach(function(section) {
-        section.classList.remove('active-section');
+    const barcha = document.querySelectorAll('.tab-section');
+    barcha.forEach(function(b) {
+        b.classList.remove('active-section');
     });
 
-    // Barcha tab tugmalardan "active" klassini olib tashlaymiz
-    const barcha_tugmalar = document.querySelectorAll('.tab-button');
-    barcha_tugmalar.forEach(function(tugma) {
-        tugma.classList.remove('active');
+    // Barcha tab tugmalardan "active" ni olib tashlaymiz
+    const tugmalar = document.querySelectorAll('.tab-button');
+    tugmalar.forEach(function(t) {
+        t.classList.remove('active');
     });
 
     // Tanlangan bo'limni ko'rsatamiz
-    const tanlangan_section = document.getElementById('tab-' + tabNomi);
-    if (tanlangan_section) {
-        tanlangan_section.classList.add('active-section');
+    const section = document.getElementById('tab-' + tabNomi);
+    if (section) {
+        section.classList.add('active-section');
     }
 
-    // Tanlangan tab tugmasini faollashtirамiz
-    const tanlangan_tugma = document.getElementById('tab-btn-' + tabNomi);
-    if (tanlangan_tugma) {
-        tanlangan_tugma.classList.add('active');
+    // Tanlangan tugmani faollashtirамiz
+    const tugma = document.getElementById('tab-btn-' + tabNomi);
+    if (tugma) {
+        tugma.classList.add('active');
     }
 
-    // Reyting bo'limi ochilganda reytingni yangilaymiz
+    // Har bir tab ochilganda kerakli ma'lumotlarni chiqaramiz
     if (tabNomi === 'reyting') {
-        reytingniKorsат();
+        reytingniChiqar();
     }
 
-    // Do'stlar bo'limi ochilganda referal ma'lumotlarini yuklaymiz
     if (tabNomi === 'dostlar') {
         dostlarBoliminiYukla();
     }
 }
 
 
-// ================================================
-// 7. TA'LIM BO'LIMI FUNKSIYALARI
-// ================================================
+// ====================================================
+// 6-QISM: TA'LIM BO'LIMI FUNKSIYALARI
+// ====================================================
 
 // Darsni ekranga chiqarish
-function darsniKorsat() {
+function darsniChiqar() {
+
     const dars = darslar[joriyDarsIndeksi];
 
-    // Dars sarlavhasi va matnini o'rnatamiz
-    document.getElementById('dars-sarlavha').textContent = dars.sarlavha;
-    document.getElementById('dars-matni').textContent    = dars.matn;
+    // Mavzu raqami va sarlavhasini chiqaramiz
+    document.getElementById('dars-raqam').textContent =
+        joriyDarsIndeksi + 1 + '-Dars';
 
-    // Darsga mos testni chiqaramiz
-    testniKorsat(joriyDarsIndeksi);
+    document.getElementById('dars-sarlavha').textContent =
+        dars.emoji + ' ' + dars.mavzu;
 
-    // Joriy ballarni ko'rsatamiz
-    balniKorsat();
+    // Dars matnini chiqaramiz
+    document.getElementById('dars-matni').textContent = dars.matn;
+
+    // Dars navigatsiya tugmalarini yangilaymiz
+    yangilaNavigatsiya();
+
+    // Test qismini yashiramiz — avval darsni o'qish kerak
+    document.getElementById('test-qismi').classList.add('hidden');
+    document.getElementById('dars-tugmasi').classList.remove('hidden');
+
+    // Holat o'zgaruvchilarini qayta o'rnatamiz
+    darsOqildi      = false;
+    joriyTestIndeksi = 0;
+
+    // Ballarni yangilaymiz
+    balniChiqar();
+}
+
+// Dars navigatsiya tugmalarini yangilash (oldingi/keyingi)
+function yangilaNavigatsiya() {
+    const oldingiTugma = document.getElementById('oldingi-dars-btn');
+    const keyingiTugma = document.getElementById('keyingi-dars-btn');
+    const darsHisobi   = document.getElementById('dars-hisobi');
+
+    // Dars hisoblagichi: "1 / 3" shaklida
+    darsHisobi.textContent =
+        (joriyDarsIndeksi + 1) + ' / ' + darslar.length;
+
+    // Birinchi darsdaman — "Oldingi" tugmasini o'chiramiz
+    if (joriyDarsIndeksi === 0) {
+        oldingiTugma.disabled = true;
+        oldingiTugma.style.opacity = '0.4';
+    } else {
+        oldingiTugma.disabled = false;
+        oldingiTugma.style.opacity = '1';
+    }
+
+    // Oxirgi darsdaman — "Keyingi" tugmasini o'chiramiz
+    if (joriyDarsIndeksi === darslar.length - 1) {
+        keyingiTugma.disabled = true;
+        keyingiTugma.style.opacity = '0.4';
+    } else {
+        keyingiTugma.disabled = false;
+        keyingiTugma.style.opacity = '1';
+    }
+}
+
+// Oldingi darsga o'tish
+function oldingiDars() {
+    if (joriyDarsIndeksi > 0) {
+        joriyDarsIndeksi--;
+        darsniChiqar();
+    }
+}
+
+// Keyingi darsga o'tish
+function keyingiDars() {
+    if (joriyDarsIndeksi < darslar.length - 1) {
+        joriyDarsIndeksi++;
+        darsniChiqar();
+    }
+}
+
+// "Testni boshlash" tugmasi bosilganda
+function testniBoshlash() {
+    darsOqildi = true;
+    joriyTestIndeksi = 0;
+
+    // Dars tugmasini yashiramiz, test qismini ko'rsatamiz
+    document.getElementById('dars-tugmasi').classList.add('hidden');
+    document.getElementById('test-qismi').classList.remove('hidden');
+
+    // Birinchi testni chiqaramiz
+    testniChiqar();
 }
 
 // Testni ekranga chiqarish
-function testniKorsat(darsIndeksi) {
-    const test = testlar[darsIndeksi];
-    joriyTestIndeksi = darsIndeksi;
+function testniChiqar() {
+
+    const dars = darslar[joriyDarsIndeksi];
+    const test = dars.testlar[joriyTestIndeksi];
+
     javobBerildi = false;
 
-    // Savol matnini o'rnatamiz
-    document.getElementById('test-savol-matni').textContent = test.savol;
+    // Test raqami: "Test 1 / 3" shaklida
+    document.getElementById('test-raqam').textContent =
+        'Test ' + (joriyTestIndeksi + 1) + ' / ' + dars.testlar.length;
 
-    // Natija va keyingi tugmalarni yashiramiz
+    // Savol matnini chiqaramiz
+    document.getElementById('test-savol').textContent = test.savol;
+
+    // Natija qismini yashiramiz
     const natija = document.getElementById('test-natija');
     natija.classList.add('hidden');
-    natija.classList.remove('togri-natija', 'notogri-natija');
+    natija.classList.remove('togri-rang', 'notogri-rang');
 
-    document.getElementById('keyingi-savol-btn').classList.add('hidden');
+    // Keyingi savol tugmasini yashiramiz
+    document.getElementById('keyingi-test-btn').classList.add('hidden');
 
     // Javob tugmalarini yaratamiz
     const javoblarDiv = document.getElementById('test-javoblar');
-    javoblarDiv.innerHTML = ''; // Avvalgisini tozalaymiz
+    javoblarDiv.innerHTML = ''; // Avvalgini tozalaymiz
 
-    test.javoblar.forEach(function(javob, indeks) {
+    test.javoblar.forEach(function(javobMatni, indeks) {
+
         const tugma = document.createElement('button');
         tugma.className = 'javob-tugma';
-        tugma.textContent = javob;
+        tugma.textContent = (indeks + 1) + '. ' + javobMatni;
 
-        // Tugmaga bosilganda javobni tekshiramiz
-        tugma.onclick = function() {
-            javobniTekshir(indeks);
-        };
+        // Tugma bosilganda javobni tekshiramiz
+        tugma.addEventListener('click', function() {
+            javobniTekshir(indeks, tugma);
+        });
 
         javoblarDiv.appendChild(tugma);
     });
 }
 
 // Javobni tekshirish
-function javobniTekshir(tanlangan_indeks) {
+function javobniTekshir(tanlangan, bosildigan_tugma) {
 
-    // Agar javob allaqachon berilgan bo'lsa, qayta bosishni oldini olamiz
-    if (javobBerildi) {
-        return;
-    }
+    // Agar javob allaqachon berilgan bo'lsa — qayta bosilmasin
+    if (javobBerildi) return;
     javobBerildi = true;
 
-    const test = testlar[joriyTestIndeksi];
-    const tugmalar = document.querySelectorAll('.javob-tugma');
-    const natija   = document.getElementById('test-natija');
-    const natijaMatni = document.getElementById('test-natija-matni');
+    const dars = darslar[joriyDarsIndeksi];
+    const test = dars.testlar[joriyTestIndeksi];
 
-    // To'g'ri javobni yashil, noto'g'rini qizil qilamiz
-    tugmalar.forEach(function(tugma, indeks) {
-        tugma.disabled = true; // Barcha tugmalarni o'chiramiz
-        if (indeks === test.togriJavobIndeksi) {
-            tugma.classList.add('togri');
-        }
+    // Barcha tugmalarni olamiz va o'chiramiz (disabled)
+    const barcha_tugmalar = document.querySelectorAll('.javob-tugma');
+    barcha_tugmalar.forEach(function(t) {
+        t.disabled = true;
     });
 
-    // Agar tanlangan javob to'g'ri bo'lsa
-    if (tanlangan_indeks === test.togriJavobIndeksi) {
-        tugmalar[tanlangan_indeks].classList.add('togri');
-        natija.classList.remove('hidden');
-        natija.classList.add('togri-natija');
+    // To'g'ri javob tugmasini har doim yashil qilamiz
+    barcha_tugmalar[test.togri].classList.add('togri-javob');
+
+    // Natija bo'limi
+    const natija      = document.getElementById('test-natija');
+    const natijaMatni = document.getElementById('test-natija-matni');
+
+    natija.classList.remove('hidden');
+
+    if (tanlangan === test.togri) {
+        // ✅ TO'G'RI JAVOB
+        bosildigan_tugma.classList.add('togri-javob');
+        natija.classList.add('togri-rang');
         natijaMatni.textContent = '✅ To\'g\'ri! +10 ball qo\'shildi!';
 
-        // 10 ball qo'shamiz
-        foydalanuvchi.bal += 10;
-        ballarniSaqla();
-        balniKorsat();
+        // 10 ball qo'shamiz va saqlaymiz
+        joriyBal += 10;
+        balniSaqla(joriyBal);
+        balniChiqar();
 
     } else {
-        // Noto'g'ri javob
-        tugmalar[tanlangan_indeks].classList.add('notogri');
-        natija.classList.remove('hidden');
-        natija.classList.add('notogri-natija');
-        natijaMatni.textContent = '❌ Noto\'g\'ri. To\'g\'ri javob yashil bilan belgilandi.';
+        // ❌ NOTO'G'RI JAVOB
+        bosildigan_tugma.classList.add('notogri-javob');
+        natija.classList.add('notogri-rang');
+        natijaMatni.textContent = '❌ Noto\'g\'ri. To\'g\'ri javob yashil bilan ko\'rsatildi.';
     }
 
-    // Keyingi savol tugmasini ko'rsatamiz
-    document.getElementById('keyingi-savol-btn').classList.remove('hidden');
-}
+    // Keyingi tugmani ko'rsatamiz
+    const keyingiBtn = document.getElementById('keyingi-test-btn');
+    keyingiBtn.classList.remove('hidden');
 
-// Keyingi savolga o'tish
-function keyingiSavol() {
-    // Keyingi darsga o'tamiz
-    joriyDarsIndeksi++;
-
-    // Agar oxirgi darsgacha yetib kelsak, boshiga qaytamiz
-    if (joriyDarsIndeksi >= darslar.length) {
-        joriyDarsIndeksi = 0;
-        alert('🎉 Barcha darslarni tugatdingiz! Boshidan boshlanmoqda.');
+    // Oxirgi test bo'lsa tugma matnini o'zgartiramiz
+    if (joriyTestIndeksi === dars.testlar.length - 1) {
+        keyingiBtn.textContent = '🏁 Darsni yakunlash';
+    } else {
+        keyingiBtn.textContent = 'Keyingi savol ➡️';
     }
-
-    // Yangi dars indeksini saqlaymiz
-    localStorage.setItem('tafakkur_dars_' + foydalanuvchi.id, joriyDarsIndeksi);
-
-    // Yangi darsni ko'rsatamiz
-    darsniKorsat();
 }
 
-// Ballarni ekranda yangilash
-function balniKorsat() {
-    document.getElementById('joriy-bal').textContent = foydalanuvchi.bal;
+// Keyingi test savoliga o'tish
+function keyingiTest() {
+
+    const dars = darslar[joriyDarsIndeksi];
+
+    if (joriyTestIndeksi < dars.testlar.length - 1) {
+        // Hali savollar bor — keyingisiga o'tamiz
+        joriyTestIndeksi++;
+        testniChiqar();
+
+    } else {
+        // Barcha savollar tugadi — dars yakunlandi
+        darsYakunlandi();
+    }
+}
+
+// Dars yakunlanganda
+function darsYakunlandi() {
+
+    const testQismi = document.getElementById('test-qismi');
+
+    // Yakunlash xabarini chiqaramiz
+    testQismi.innerHTML =
+        '<div class="yakunlash-xabar">' +
+            '<div class="yakunlash-emoji">🎉</div>' +
+            '<h3>Dars yakunlandi!</h3>' +
+            '<p>Siz bu darsni muvaffaqiyatli tugatdingiz.</p>' +
+            '<p class="joriy-bal-yak">Umumiy balingiz: <strong>' + joriyBal + ' ball</strong></p>' +
+            '<button class="keyingi-dars-yak-btn" onclick="keyingiDarsYakundan()">' +
+                (joriyDarsIndeksi < darslar.length - 1
+                    ? '➡️ Keyingi Darsga O\'tish'
+                    : '🏆 Reytingni Ko\'rish') +
+            '</button>' +
+        '</div>';
+}
+
+// Yakunlash xabaridan keyingi darsga yoki reytingga o'tish
+function keyingiDarsYakundan() {
+
+    if (joriyDarsIndeksi < darslar.length - 1) {
+        joriyDarsIndeksi++;
+        darsniChiqar();
+        // Test qismini yashirib, darsni ko'rsatamiz
+        document.getElementById('test-qismi').classList.add('hidden');
+        document.getElementById('dars-tugmasi').classList.remove('hidden');
+    } else {
+        // Oxirgi dars tugadi — reytingga o'tamiz
+        showTab('reyting');
+    }
+}
+
+// Ballarni ekranda ko'rsatish
+function balniChiqar() {
+    const balElement = document.getElementById('joriy-bal');
+    if (balElement) {
+        balElement.textContent = joriyBal;
+    }
 }
 
 
-// ================================================
-// 8. REYTING BO'LIMI FUNKSIYALARI
-// ================================================
+// ====================================================
+// 7-QISM: REYTING BO'LIMI
+// ====================================================
 
-function reytingniKorsат() {
+// Namuna peshqadamlar ro'yxati
+// Haqiqiy loyihada bu serverdan keladi
+const peshqadamlar = [
+    { ism: 'Abdulloh T.',  ball: 320, emoji: '🥇' },
+    { ism: 'Zulfiya M.',   ball: 280, emoji: '🥈' },
+    { ism: 'Sardor K.',    ball: 250, emoji: '🥉' },
+    { ism: 'Nilufar R.',   ball: 210, emoji: '4️⃣'  },
+    { ism: 'Bobur A.',     ball: 180, emoji: '5️⃣'  },
+    { ism: 'Kamola S.',    ball: 150, emoji: '6️⃣'  },
+    { ism: 'Jasur N.',     ball: 120, emoji: '7️⃣'  },
+    { ism: 'Madina O.',    ball: 100, emoji: '8️⃣'  },
+    { ism: 'Sherzod B.',   ball: 80,  emoji: '9️⃣'  },
+    { ism: 'Hulkar Y.',    ball: 60,  emoji: '🔟'  }
+];
 
-    // Foydalanuvchini reytingga qo'shamiz (agar u ro'yxatda yo'q bo'lsa)
-    const mavjud = reytingMalumotlari.find(function(r) {
-        return r.ism === foydalanuvchi.ism;
+function reytingniChiqar() {
+
+    // Foydalanuvchini ro'yxatga qo'shamiz yoki yangilaymiz
+    const mavjud = peshqadamlar.find(function(p) {
+        return p.ism === foydalanuvchiIsmi;
     });
 
     if (mavjud) {
-        mavjud.bal = foydalanuvchi.bal; // Ballarni yangilaymiz
+        mavjud.ball = joriyBal;
     } else {
-        reytingMalumotlari.push({
-            ism: foydalanuvchi.ism,
-            bal: foydalanuvchi.bal
+        peshqadamlar.push({
+            ism:   foydalanuvchiIsmi,
+            ball:  joriyBal,
+            emoji: '👤'
         });
     }
 
-    // Reytingni ballar bo'yicha saralamiz (kattadan kichikka)
-    reytingMalumotlari.sort(function(a, b) {
-        return b.bal - a.bal;
-    });
+    // Ballar bo'yicha saralamiz (kattadan kichikka)
+    peshqadamlar.sort(function(a, b) { return b.ball - a.ball; });
 
-    // Reyting ro'yxatini ekranda yaratamiz
+    // Ro'yxatni ekranga chiqaramiz
     const royxatDiv = document.getElementById('reyting-royxati');
     royxatDiv.innerHTML = '';
 
-    reytingMalumotlari.forEach(function(kishi, indeks) {
-        const orn = indeks + 1;
+    peshqadamlar.forEach(function(kishi, indeks) {
 
-        // O'rin ikonkasi
-        let ornMatni = orn + '.';
-        let ornKlass = '';
-        if (orn === 1) { ornMatni = '🥇'; ornKlass = 'birinchi';  }
-        if (orn === 2) { ornMatni = '🥈'; ornKlass = 'ikkinchi';  }
-        if (orn === 3) { ornMatni = '🥉'; ornKlass = 'uchinchi';  }
-
-        // Qator elementini yaratamiz
+        const orn  = indeks + 1;
         const qator = document.createElement('div');
         qator.className = 'reyting-qatori';
 
-        // Agar bu hozirgi foydalanuvchi bo'lsa, ajratib ko'rsatamiz
-        if (kishi.ism === foydalanuvchi.ism) {
-            qator.style.backgroundColor = '#d8f3dc';
-            qator.style.borderColor = '#2d6a4f';
+        // Hozirgi foydalanuvchi — ajratib ko'rsatamiz
+        if (kishi.ism === foydalanuvchiIsmi) {
+            qator.classList.add('mening-qatorim');
         }
 
+        // Birinchi 3 o'rin uchun maxsus belgi
+        let ornBelgi = orn + '.';
+        if (orn === 1) ornBelgi = '🥇';
+        if (orn === 2) ornBelgi = '🥈';
+        if (orn === 3) ornBelgi = '🥉';
+
         qator.innerHTML =
-            '<span class="reyting-orn ' + ornKlass + '">' + ornMatni + '</span>' +
-            '<span class="reyting-ism">' + kishi.ism + '</span>' +
-            '<span class="reyting-ball">' + kishi.bal + ' ball</span>';
+            '<span class="reyting-orn">'  + ornBelgi     + '</span>' +
+            '<span class="reyting-ism">'  + kishi.ism    + '</span>' +
+            '<span class="reyting-ball">' + kishi.ball   + ' ball</span>';
 
         royxatDiv.appendChild(qator);
 
-        // Foydalanuvchining o'rnini topamiz
-        if (kishi.ism === foydalanuvchi.ism) {
-            document.getElementById('mening-ornim').textContent = orn;
-            document.getElementById('mening-balim-reyting').textContent = kishi.bal;
+        // Foydalanuvchining o'rnini "Mening o'rnim" bo'limida chiqaramiz
+        if (kishi.ism === foydalanuvchiIsmi) {
+            document.getElementById('mening-ornim-raqam').textContent = orn + '-o\'rin';
+            document.getElementById('mening-balim').textContent        = joriyBal + ' ball';
         }
     });
 }
 
 
-// ================================================
-// 9. DO'STLAR BO'LIMI FUNKSIYALARI
-// ================================================
+// ====================================================
+// 8-QISM: DO'STLAR BO'LIMI (REFERAL)
+// ====================================================
 
-// Do'stlar bo'limini yuklash
 function dostlarBoliminiYukla() {
 
-    // Referal havolasini yaratamiz
-    // Bot nomi: @TafakkurMoliyaBot (o'zingizning bot nomingizni qo'ying)
-    const botNomi = 'TafakkurMoliyaBot';
-    const referalHavola = 'https://t.me/' + botNomi + '?start=ref_' + foydalanuvchi.id;
+    const botNomi    = 'TafakkurMoliyaBot'; // O'zingizning bot nomingiz
+    const referalUrl = 'https://t.me/' + botNomi + '?start=ref_' + foydalanuvchiId;
 
-    // Havolani input ga o'rnatamiz
-    document.getElementById('referal-havola-input').value = referalHavola;
-
-    // Statistikani yangilaymiz
-    document.getElementById('taklif-soni').textContent  = foydalanuvchi.referalSoni;
-    document.getElementById('referal-ball').textContent = foydalanuvchi.referalSoni * 10;
-
-    // Do'stlar ro'yxatini chiqaramiz
-    dostlarRoyxatiniKorsat();
-}
-
-// Do'stlar ro'yxatini chiqarish
-function dostlarRoyxatiniKorsat() {
-    const royxatDiv = document.getElementById('dostlar-royxati');
-
-    // LocalStorage dan do'stlar ro'yxatini yuklaymiz
-    const saqlangan = localStorage.getItem('tafakkur_dostlar_' + foydalanuvchi.id);
-    const dostlar = saqlangan ? JSON.parse(saqlangan) : [];
-
-    if (dostlar.length === 0) {
-        royxatDiv.innerHTML = '<p id="dostlar-yuklanmoqda">Hali hech kim taklif qilinmagan.</p>';
-        return;
+    // Referal havolani input ga o'rnatamiz
+    const input = document.getElementById('referal-havola-input');
+    if (input) {
+        input.value = referalUrl;
     }
 
-    royxatDiv.innerHTML = '';
-
-    dostlar.forEach(function(dost) {
-        const qator = document.createElement('div');
-        qator.className = 'dost-qatori';
-        qator.innerHTML =
-            '<span class="dost-avatar">👤</span>' +
-            '<span class="dost-ism">' + dost.ism + '</span>' +
-            '<span class="dost-ball">+10 ball</span>';
-        royxatDiv.appendChild(qator);
-    });
+    // Referal statistikani chiqaramiz
+    const referalSoni = parseInt(localStorage.getItem('tafakkur_referal_' + foydalanuvchiId) || '0');
+    const elem1 = document.getElementById('taklif-soni');
+    const elem2 = document.getElementById('referal-ball');
+    if (elem1) elem1.textContent = referalSoni;
+    if (elem2) elem2.textContent = referalSoni * 10;
 }
 
-// Referal havolani nusxalash
+// Havolani nusxalash
 function havolaNusxala() {
-    const input = document.getElementById('referal-havola-input');
+
+    const input  = document.getElementById('referal-havola-input');
+    const xabar  = document.getElementById('nusxalandi-xabar');
     const havola = input.value;
 
-    // Telegram Mini App ichida clipboard ishlatamiz
     if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(havola).then(function() {
-            nusxalandiKorsat();
+            nusxalandiKorsat(xabar);
         });
     } else {
-        // Eski usul (ba'zi brauzerlar uchun)
+        // Eski usul
         input.select();
         document.execCommand('copy');
-        nusxalandiKorsat();
+        nusxalandiKorsat(xabar);
     }
 }
 
-// "Nusxalandi!" xabarini ko'rsatish
-function nusxalandiKorsat() {
-    const xabar = document.getElementById('nusxalandi-xabar');
+// "Nusxalandi!" xabarini 2 soniya ko'rsatish
+function nusxalandiKorsat(xabar) {
     xabar.classList.remove('hidden');
-
-    // 2 soniyadan so'ng yashirамiz
     setTimeout(function() {
         xabar.classList.add('hidden');
     }, 2000);
@@ -503,39 +652,44 @@ function nusxalandiKorsat() {
 
 // Telegram orqali ulashish
 function telegramUlash() {
+
     const botNomi  = 'TafakkurMoliyaBot';
-    const havola   = 'https://t.me/' + botNomi + '?start=ref_' + foydalanuvchi.id;
-    const xabar    = 'Assalomu alaykum! 🕌 Tafakkur Moliya ilovasini ko\'rib chiqing! ' +
-                     'Islom moliyasini o\'rganib, ball to\'plang. ' +
-                     'Mening havolam orqali kiring: ' + havola;
+    const havola   = 'https://t.me/' + botNomi + '?start=ref_' + foydalanuvchiId;
+    const matn     =
+        'Assalomu alaykum! 🕌\n' +
+        'Tafakkur Moliya ilovasini sinab ko\'ring!\n' +
+        'Islom moliyasini o\'rganib, ball to\'plang.\n\n' +
+        'Mening havolam: ' + havola;
 
-    // Telegram share URL
-    const shareUrl = 'https://t.me/share/url?url=' +
-                     encodeURIComponent(havola) +
-                     '&text=' +
-                     encodeURIComponent(xabar);
+    const shareUrl =
+        'https://t.me/share/url?url=' +
+        encodeURIComponent(havola) +
+        '&text=' +
+        encodeURIComponent(matn);
 
-    // Telegram Mini App orqali ochamiz
     tg.openTelegramLink(shareUrl);
 }
 
 
-// ================================================
-// 10. ILOVANI ISHGA TUSHIRISH
-// ================================================
+// ====================================================
+// 9-QISM: ILOVANI ISHGA TUSHIRISH
+// Sahifa to'liq yuklangandan so'ng bajariladi
+// ====================================================
 
-// Sahifa to'liq yuklangandan so'ng ishga tushadi
 window.onload = function() {
 
-    // Saqlangan ballarni yuklaymiz
-    ballarniYukla();
+    // Birinchi darsni chiqaramiz
+    darsniChiqar();
 
-    // Oxirgi o'qilgan dars indeksini yuklaymiz
-    darsIndeksiniYukla();
+    // Foydalanuvchi ismini header da ko'rsatamiz
+    const ismElement = document.getElementById('foydalanuvchi-ismi');
+    if (ismElement) {
+        ismElement.textContent = foydalanuvchiIsmi;
+    }
 
-    // Birinchi darsni ko'rsatamiz
-    darsniKorsat();
+    // Joriy ballarni ko'rsatamiz
+    balniChiqar();
 
-    // Telegram ga tayyor ekanligini bildiramiz
-    tg.ready();
+    // Ta'lim tabini boshida faol qilamiz
+    showTab('talim');
 };

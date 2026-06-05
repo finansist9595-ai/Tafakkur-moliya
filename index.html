@@ -16,24 +16,28 @@
 <body>
 
     <!-- ================================================ -->
-    <!-- ASOSIY WRAPPER - Hamma narsa shu ichida bo'ladi  -->
+    <!-- ASOSIY WRAPPER                                    -->
     <!-- ================================================ -->
     <div id="app">
 
-        <!-- ============================================ -->
-        <!-- HEADER - Ilovaning yuqori qismi              -->
-        <!-- ============================================ -->
-        <header id="main-header">
-            <h1>🕌 Tafakkur Moliya</h1>
-            <p>Islom moliyasini o'rganing</p>
-        </header>
 
         <!-- ============================================ -->
-        <!-- TAB TUGMALARI - 3 ta bo'lim tugmalari        -->
+        <!-- HEADER                                       -->
+        <!-- ============================================ -->
+        <header id="main-header">
+            <div id="header-ichki">
+                <h1>🕌 Tafakkur Moliya</h1>
+                <!-- Foydalanuvchi ismi Telegram dan keladi -->
+                <p id="foydalanuvchi-ismi">Yuklanmoqda...</p>
+            </div>
+        </header>
+
+
+        <!-- ============================================ -->
+        <!-- TAB NAVIGATSIYA (PASTKI MENYU)               -->
         <!-- ============================================ -->
         <nav id="tab-navigation">
 
-            <!-- 1-tab tugmasi: Ta'lim -->
             <button
                 class="tab-button active"
                 id="tab-btn-talim"
@@ -41,7 +45,6 @@
                 📚 Ta'lim
             </button>
 
-            <!-- 2-tab tugmasi: Reyting -->
             <button
                 class="tab-button"
                 id="tab-btn-reyting"
@@ -49,7 +52,6 @@
                 🏆 Reyting
             </button>
 
-            <!-- 3-tab tugmasi: Do'stlar -->
             <button
                 class="tab-button"
                 id="tab-btn-dostlar"
@@ -59,62 +61,101 @@
 
         </nav>
 
+
         <!-- ============================================ -->
-        <!-- TAB CONTENT AREA - Bo'limlar shu yerda       -->
+        <!-- BARCHA BO'LIMLAR SHU YERDA                  -->
         <!-- ============================================ -->
         <main id="tab-content-area">
 
+
             <!-- ======================================== -->
             <!-- 1-BO'LIM: TA'LIM                        -->
-            <!-- Bu bo'lim boshida ko'rinib turadi        -->
             <!-- ======================================== -->
             <section id="tab-talim" class="tab-section active-section">
 
-                <h2>📖 Bugungi Dars</h2>
+                <!-- Dars sarlavhasi va navigatsiya -->
+                <div id="dars-navigatsiya">
 
-                <!-- Dars matni chiqadigan joy -->
-                <div id="dars-matni-container">
-                    <div class="card">
-                        <h3 id="dars-sarlavha">Dars yuklanmoqda...</h3>
-                        <p id="dars-matni">Iltimos, kuting.</p>
-                    </div>
+                    <!-- Oldingi dars tugmasi -->
+                    <button
+                        id="oldingi-dars-btn"
+                        onclick="oldingiDars()">
+                        ◀️
+                    </button>
+
+                    <!-- Dars hisoblagichi: "1 / 3" -->
+                    <span id="dars-hisobi">1 / 3</span>
+
+                    <!-- Keyingi dars tugmasi -->
+                    <button
+                        id="keyingi-dars-btn"
+                        onclick="keyingiDars()">
+                        ▶️
+                    </button>
+
                 </div>
 
-                <!-- Test savollari chiqadigan joy -->
-                <div id="test-container">
-                    <h2>📝 Test</h2>
+                <!-- Dars kartasi -->
+                <div class="card" id="dars-kartasi">
+
+                    <!-- Dars raqami: "1-Dars" -->
+                    <p id="dars-raqam">1-Dars</p>
+
+                    <!-- Dars mavzu sarlavhasi -->
+                    <h3 id="dars-sarlavha">Yuklanmoqda...</h3>
+
+                    <!-- Dars matni -->
+                    <p id="dars-matni">Iltimos, kuting.</p>
+
+                </div>
+
+                <!-- "Testni boshlash" tugmasi — darsdan keyin chiqadi -->
+                <div id="dars-tugmasi">
+                    <button
+                        id="testni-boshlash-btn"
+                        onclick="testniBoshlash()">
+                        📝 Testni Boshlash
+                    </button>
+                </div>
+
+                <!-- ====================================== -->
+                <!-- TEST QISMI — dars tugmasidan keyin    -->
+                <!-- ko'rinadi, boshida yashirin           -->
+                <!-- ====================================== -->
+                <div id="test-qismi" class="hidden">
+
+                    <!-- Test raqami: "Test 1 / 3" -->
+                    <p id="test-raqam">Test 1 / 3</p>
 
                     <!-- Savol matni -->
                     <div class="card">
-                        <p id="test-savol-matni">Test yuklanmoqda...</p>
+                        <p id="test-savol">Savol yuklanmoqda...</p>
                     </div>
 
-                    <!-- Javob variantlari tugmalari -->
-                    <div id="test-javoblar">
-                        <!-- Javoblar app.js orqali bu yerga qo'shiladi -->
-                    </div>
+                    <!-- Javob tugmalari shu yerga app.js tomonidan qo'shiladi -->
+                    <div id="test-javoblar"></div>
 
-                    <!-- Natija xabari (to'g'ri yoki noto'g'ri) -->
+                    <!-- Natija xabari: to'g'ri yoki noto'g'ri -->
                     <div id="test-natija" class="hidden">
                         <p id="test-natija-matni"></p>
                     </div>
 
-                    <!-- Keyingi savolga o'tish tugmasi -->
+                    <!-- Keyingi savol tugmasi -->
                     <button
-                        id="keyingi-savol-btn"
+                        id="keyingi-test-btn"
                         class="hidden"
-                        onclick="keyingiSavol()">
+                        onclick="keyingiTest()">
                         Keyingi savol ➡️
                     </button>
-                </div>
 
-                <!-- Foydalanuvchining joriy bali -->
-                <div id="ball-container">
-                    <div class="card ball-card">
-                        <p>Sizning balingiz:</p>
-                        <span id="joriy-bal">0</span>
-                        <span> ball</span>
-                    </div>
+                </div>
+                <!-- test-qismi tugadi -->
+
+                <!-- Joriy ball -->
+                <div class="card ball-karta">
+                    <p>Sizning balingiz:</p>
+                    <span id="joriy-bal">0</span>
+                    <span class="ball-yozuvi"> ball</span>
                 </div>
 
             </section>
@@ -123,24 +164,22 @@
 
             <!-- ======================================== -->
             <!-- 2-BO'LIM: REYTING                       -->
-            <!-- Foydalanuvchilar reytingi chiqadigan joy -->
             <!-- ======================================== -->
             <section id="tab-reyting" class="tab-section">
 
                 <h2>🏆 Reyting Jadvali</h2>
-                <p class="section-tavsif">Eng ko'p ball to'plagan foydalanuvchilar</p>
+                <p class="section-tavsif">
+                    Eng ko'p ball to'plagan foydalanuvchilar
+                </p>
 
-                <!-- Reyting ro'yxati shu yerga chiqadi -->
-                <div id="reyting-royxati">
-                    <!-- Reyting qatorlari app.js orqali bu yerga qo'shiladi -->
-                    <p id="reyting-yuklanmoqda">Reyting yuklanmoqda...</p>
-                </div>
+                <!-- Reyting ro'yxati app.js tomonidan to'ldiriladi -->
+                <div id="reyting-royxati"></div>
 
-                <!-- Mening o'rnim bo'limi -->
-                <div class="card mening-ornim-card">
-                    <h3>📌 Mening o'rnim</h3>
-                    <p>Siz hozirda <strong id="mening-ornim">—</strong>-o'rinda turibsiz</p>
-                    <p>Balingiz: <strong id="mening-balim-reyting">0</strong></p>
+                <!-- Foydalanuvchining o'z o'rni -->
+                <div class="card mening-ornim-karta">
+                    <h3>📌 Mening O'rnim</h3>
+                    <p>O'rin: <strong id="mening-ornim-raqam">—</strong></p>
+                    <p>Ball: <strong id="mening-balim">0 ball</strong></p>
                 </div>
 
             </section>
@@ -149,7 +188,6 @@
 
             <!-- ======================================== -->
             <!-- 3-BO'LIM: DO'STLAR                      -->
-            <!-- Referal havolasi va do'stlar ro'yxati    -->
             <!-- ======================================== -->
             <section id="tab-dostlar" class="tab-section">
 
@@ -158,75 +196,69 @@
                     Har bir do'st uchun <strong>+10 ball</strong> oling!
                 </p>
 
-                <!-- Referal havola bo'limi -->
-                <div class="card referal-card">
+                <!-- Referal havola kartasi -->
+                <div class="card referal-karta">
+
                     <h3>🔗 Sizning Havolangiz</h3>
 
-                    <!-- Referal havola ko'rsatiladigan joy -->
-                    <div id="referal-havola-container">
-                        <input
-                            type="text"
-                            id="referal-havola-input"
-                            class="referal-input"
-                            value="Havola yuklanmoqda..."
-                            readonly>
-                    </div>
+                    <!-- Referal havola — app.js to'ldiradi -->
+                    <input
+                        type="text"
+                        id="referal-havola-input"
+                        class="referal-input"
+                        value="Yuklanmoqda..."
+                        readonly>
 
-                    <!-- Havolani nusxalash tugmasi -->
+                    <!-- Nusxalash tugmasi -->
                     <button
                         id="nusxalash-btn"
                         onclick="havolaNusxala()">
                         📋 Havolani Nusxalash
                     </button>
 
-                    <!-- Nusxalanganlik xabari -->
-                    <p id="nusxalandi-xabar" class="hidden">✅ Nusxalandi!</p>
+                    <!-- "Nusxalandi!" xabari — boshida yashirin -->
+                    <p id="nusxalandi-xabar" class="hidden">
+                        ✅ Havola nusxalandi!
+                    </p>
 
-                    <!-- Telegramda ulashish tugmasi -->
+                    <!-- Telegram orqali ulashish -->
                     <button
                         id="ulashish-btn"
                         onclick="telegramUlash()">
                         ✈️ Telegram orqali Ulashish
                     </button>
+
                 </div>
 
-                <!-- Taklif qilingan do'stlar statistikasi -->
-                <div class="card statistika-card">
+                <!-- Statistika kartasi -->
+                <div class="card statistika-karta">
                     <h3>📊 Statistika</h3>
+
                     <div class="statistika-qator">
                         <span>Taklif qilingan do'stlar:</span>
                         <strong id="taklif-soni">0</strong>
                     </div>
-                    <div class="statistika-qator">
-                        <span>Shu orqali olingan ball:</span>
-                        <strong id="referal-ball">0</strong>
-                    </div>
-                </div>
 
-                <!-- Do'stlar ro'yxati -->
-                <div id="dostlar-royxati-container">
-                    <h3>👨‍👩‍👧‍👦 Mening Do'stlarim</h3>
-                    <div id="dostlar-royxati">
-                        <!-- Do'stlar ro'yxati app.js orqali bu yerga qo'shiladi -->
-                        <p id="dostlar-yuklanmoqda">
-                            Hali hech kim taklif qilinmagan.
-                        </p>
+                    <div class="statistika-qator">
+                        <span>Referal orqali olingan ball:</span>
+                        <strong id="referal-ball">0</strong>
                     </div>
                 </div>
 
             </section>
             <!-- DO'STLAR bo'limi tugadi -->
 
+
         </main>
         <!-- tab-content-area tugadi -->
+
 
     </div>
     <!-- app tugadi -->
 
 
     <!-- ================================================ -->
-    <!-- app.js faylini eng pastda ulaymiz                -->
-    <!-- (HTML to'liq yuklangandan so'ng ishga tushadi)   -->
+    <!-- APP.JS — ENG PASTDA ULANADI                      -->
     <!-- ================================================ -->
     <script src="app.js"></script>
 
