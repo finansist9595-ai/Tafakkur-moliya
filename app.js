@@ -1,34 +1,4 @@
-// AWS Config sozlamalari
-AWS.config.update({
-    region: 'us-east-1', // Agar jadvalni boshqa regionda ochgan bo'lsangiz, o'sha region nomini yozing (masalan, eu-central-1)
-    accessKeyId: 'AKIAUHEJYJ4PIEEHMX5N',
-    secretAccessKey: '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'
-});
 
-const docClient = new AWS.DynamoDB.DocumentClient();
-
-// Bazadan test savollarini yuklab olish funksiyasi
-function loadTestsFromDynamoDB() {
-    const params = {
-        TableName: 'TafakkurMoliyaTests'
-    };
-
-    docClient.scan(params, function(err, data) {
-        if (err) {
-            console.error("Bazadan ma'lumot olishda xatolik:", JSON.stringify(err, null, 2));
-        } else {
-            console.log("Savollar muvaffaqiyatli yuklandi:", data.Items);
-            // data.Items ichida bazadagi barcha savollar massiv ko'rinishida keladi
-            // Bu yerda kelgan ma'lumotni o'zingizning testni boshlash funksiyangizga uzatasiz
-            initMyTestApp(data.Items); 
-        }
-    });
-}
-
-// Sahifa yuklanganda avtomatik bazaga ulanadi
-window.onload = function() {
-    loadTestsFromDynamoDB();
-};
 // ====================================================
 // TAFAKKUR MOLIYA — APP.JS
 // Ilovaning barcha funksiyalari shu yerda
