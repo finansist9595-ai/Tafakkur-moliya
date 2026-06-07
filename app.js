@@ -1,7 +1,7 @@
-
 // ====================================================
 // TAFAKKUR MOLIYA — APP.JS
-// Ilovaning barcha funksiyalari shu yerda
+// Mini App logikasi: darslar, testlar, ball, reyting, referal
+// Darslar va testlar bazasi lessons.js faylida saqlanadi.
 // ====================================================
 
 
@@ -9,103 +9,142 @@
 // 1-QISM: TELEGRAM WEB APP ULANISHI
 // ====================================================
 
-// Telegram ob'ektini olamiz
-const tg = window.Telegram.WebApp;
+const tg = window.Telegram && window.Telegram.WebApp
+    ? window.Telegram.WebApp
+    : null;
 
-// Ilovani to'liq ekranga yoyamiz
-tg.expand();
+if (tg) {
+    tg.expand();
+    tg.ready();
+}
 
-// Telegram ga ilova tayyor ekanligini bildirамiz
-tg.ready();
-
-// Telegram tema ranglarini olamiz
-// Agar Telegram rangi bo'lmasa, o'zimizning yashil rangimiz ishlatiladi
-const tgRang      = tg.themeParams.button_color      || '#1b4332';
-const tgMatnRang  = tg.themeParams.button_text_color || '#ffffff';
-
-// Foydalanuvchi ma'lumotlarini Telegram dan olamiz
 let foydalanuvchiIsmi = 'Mehmon';
-let foydalanuvchiId   = 0;
+let foydalanuvchiId = 'guest';
 
-if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
     foydalanuvchiIsmi = tg.initDataUnsafe.user.first_name || 'Mehmon';
-    foydalanuvchiId   = tg.initDataUnsafe.user.id || 0;
+    foydalanuvchiId = tg.initDataUnsafe.user.id || 'guest';
 }
 
 
 // ====================================================
-// 2-QISM: FOYDALANUVCHI BALLARI (LocalStorage)
+// 2-QISM: DARSLAR BAZASINI TEKSHIRISH
+// lessons.js ichida const darslar = [...] bo‘lishi kerak
 // ====================================================
 
-// Foydalanuvchi balini LocalStorage dan yuklaymiz
-// LocalStorage — bu brauzer ichidagi kichik xotira
+const darslarRoyxati =
+    typeof darslar !== 'undefined' && Array.isArray(darslar)
+        ? darslar
+        : [];
+
+
+// ====================================================
+// 3-QISM: FOYDALANUVCHI BALLARI
+// ====================================================
+
 function balniYukla() {
     const saqlangan = localStorage.getItem('tafakkur_bal_' + foydalanuvchiId);
+
     if (saqlangan !== null) {
-        return parseInt(saqlangan);
+        return parseInt(saqlangan, 10) || 0;
     }
-    return 0; // Birinchi marta kirsa, 0 ball
+
+    return 0;
 }
 
-// Ballarni LocalStorage ga saqlaymiz
 function balniSaqla(bal) {
     localStorage.setItem('tafakkur_bal_' + foydalanuvchiId, bal);
 }
 
-// Joriy foydalanuvchi bali
 let joriyBal = balniYukla();
 
 
 // ====================================================
-// 3-QISM: DARSLAR MA'LUMOTLARI
-// 3 ta mavzu, har birida 3 ta test — jami 9 ta test
+// 4-QISM: ILOVA HOLATI
 // ====================================================
 
-
-
-
-// ====================================================
-// 4-QISM: HOLAT O'ZGARUVCHILARI
-// (Ilovaning hozirgi holati)
-// ====================================================
-
-let joriyDarsIndeksi  = 0;   // Qaysi dars ko'rsatilmoqda (0, 1, 2)
-let joriyTestIndeksi  = 0;   // Qaysi test ko'rsatilmoqda (0, 1, 2)
-let javobBerildi      = false; // Test javob berilganmi?
-let darsOqildi        = false; // Dars o'qildi tugmasi bosildimi?
+let joriyDarsIndeksi = 0;
+let joriyTestIndeksi = 0;
+let javobBerildi = false;
 
 
 // ====================================================
-// 5-QISM: TAB (PASTKI MENYU) FUNKSIYASI
+// 5-QISM: YORDAMCHI FUNKSIYALAR
+// ====================================================
+
+function element(id) {
+    return document.getElementById(id);
+}
+
+function xavfsizMatn(qiymat, fallback = '') {
+    if (qiymat === undefined || qiymat === null) return fallback;
+    return String(qiymat);
+}
+
+function darsMavjudmi() {
+    return darslarRoyxati.length > 0;
+}
+
+function joriyDarsniOl() {
+    if (!darsMavjudmi()) return null;
+    return darslarRoyxati[joriyDarsIndeksi] || null;
+}
+
+function testQisminiTikla() {
+    const testQismi = element('test-qismi');
+
+    if (!testQismi) return;
+
+    testQismi.innerHTML = `
+        <p id="test-raqam">Test 1 / 3</p>
+
+        <div class="card">
+            <p id="test-savol">Savol yuklanmoqda...</p>
+        </div>
+
+        <div id="test-javoblar"></div>
+
+        <div id="test-natija" class="hidden">
+            <p id="test-natija-matni"></p>
+        </div>
+
+        <button
+            id="keyingi-test-btn"
+            class="hidden"
+            onclick="keyingiTest()">
+            Keyingi savol ➡️
+        </button>
+    `;
+}
+
+
+// ====================================================
+// 6-QISM: TAB NAVIGATSIYA
 // ====================================================
 
 function showTab(tabNomi) {
+    const barchaBolimlar = document.querySelectorAll('.tab-section');
 
-    // Barcha bo'limlarni yashiramiz
-    const barcha = document.querySelectorAll('.tab-section');
-    barcha.forEach(function(b) {
-        b.classList.remove('active-section');
+    barchaBolimlar.forEach(function (bolim) {
+        bolim.classList.remove('active-section');
     });
 
-    // Barcha tab tugmalardan "active" ni olib tashlaymiz
-    const tugmalar = document.querySelectorAll('.tab-button');
-    tugmalar.forEach(function(t) {
-        t.classList.remove('active');
+    const barchaTugmalar = document.querySelectorAll('.tab-button');
+
+    barchaTugmalar.forEach(function (tugma) {
+        tugma.classList.remove('active');
     });
 
-    // Tanlangan bo'limni ko'rsatamiz
-    const section = document.getElementById('tab-' + tabNomi);
-    if (section) {
-        section.classList.add('active-section');
+    const tanlanganBolim = element('tab-' + tabNomi);
+    if (tanlanganBolim) {
+        tanlanganBolim.classList.add('active-section');
     }
 
-    // Tanlangan tugmani faollashtirамiz
-    const tugma = document.getElementById('tab-btn-' + tabNomi);
-    if (tugma) {
-        tugma.classList.add('active');
+    const tanlanganTugma = element('tab-btn-' + tabNomi);
+    if (tanlanganTugma) {
+        tanlanganTugma.classList.add('active');
     }
 
-    // Har bir tab ochilganda kerakli ma'lumotlarni chiqaramiz
     if (tabNomi === 'reyting') {
         reytingniChiqar();
     }
@@ -117,69 +156,124 @@ function showTab(tabNomi) {
 
 
 // ====================================================
-// 6-QISM: TA'LIM BO'LIMI FUNKSIYALARI
+// 7-QISM: DARSNI EKRANGA CHIQARISH
 // ====================================================
 
-// Darsni ekranga chiqarish
 function darsniChiqar() {
+    testQisminiTikla();
 
-    const dars = darslar[joriyDarsIndeksi];
+    if (!darsMavjudmi()) {
+        const sarlavha = element('dars-sarlavha');
+        const matn = element('dars-matni');
+        const hisob = element('dars-hisobi');
 
-    // Mavzu raqami va sarlavhasini chiqaramiz
-    document.getElementById('dars-raqam').textContent =
-        joriyDarsIndeksi + 1 + '-Dars';
+        if (hisob) hisob.textContent = '0 / 0';
+        if (sarlavha) sarlavha.textContent = 'Darslar yuklanmadi';
+        if (matn) {
+            matn.textContent =
+                'lessons.js faylida darslar topilmadi. Iltimos, lessons.js fayli index.html ichida app.js dan oldin ulanganini tekshiring.';
+        }
 
-    document.getElementById('dars-sarlavha').textContent =
-        dars.emoji + ' ' + dars.mavzu;
+        return;
+    }
 
-    // Dars matnini chiqaramiz
-    document.getElementById('dars-matni').textContent = dars.matn;
+    const dars = joriyDarsniOl();
 
-    // Dars navigatsiya tugmalarini yangilaymiz
-    yangilaNavigatsiya();
+    if (!dars) return;
 
-    // Test qismini yashiramiz — avval darsni o'qish kerak
-    document.getElementById('test-qismi').classList.add('hidden');
-    document.getElementById('dars-tugmasi').classList.remove('hidden');
+    const darsRaqam = element('dars-raqam');
+    const darsSarlavha = element('dars-sarlavha');
+    const darsMatni = element('dars-matni');
+    const testQismi = element('test-qismi');
+    const darsTugmasi = element('dars-tugmasi');
+    const testniBoshlashBtn = element('testni-boshlash-btn');
 
-    // Holat o'zgaruvchilarini qayta o'rnatamiz
-    darsOqildi      = false;
+    if (darsRaqam) {
+        darsRaqam.textContent = (joriyDarsIndeksi + 1) + '-Dars';
+    }
+
+    if (darsSarlavha) {
+        darsSarlavha.textContent =
+            xavfsizMatn(dars.emoji, '📘') + ' ' + xavfsizMatn(dars.mavzu, 'Dars mavzusi');
+    }
+
+    if (darsMatni) {
+        let yakuniyMatn = xavfsizMatn(dars.matn, 'Dars matni kiritilmagan.');
+
+        if (dars.disclaimer) {
+            yakuniyMatn +=
+                '\n\n⚠️ Eslatma:\n' +
+                xavfsizMatn(dars.disclaimer);
+        }
+
+        if (dars.review_status) {
+            yakuniyMatn +=
+                '\n\nReview status: ' +
+                xavfsizMatn(dars.review_status);
+        }
+
+        darsMatni.textContent = yakuniyMatn;
+        darsMatni.style.whiteSpace = 'pre-line';
+    }
+
+    if (testQismi) {
+        testQismi.classList.add('hidden');
+    }
+
+    if (darsTugmasi) {
+        darsTugmasi.classList.remove('hidden');
+    }
+
+    if (testniBoshlashBtn) {
+        const testlar = Array.isArray(dars.testlar) ? dars.testlar : [];
+
+        if (testlar.length === 0) {
+            testniBoshlashBtn.disabled = true;
+            testniBoshlashBtn.textContent = 'Test mavjud emas';
+        } else {
+            testniBoshlashBtn.disabled = false;
+            testniBoshlashBtn.textContent = '📝 Testni Boshlash';
+        }
+    }
+
     joriyTestIndeksi = 0;
+    javobBerildi = false;
 
-    // Ballarni yangilaymiz
+    yangilaNavigatsiya();
     balniChiqar();
 }
 
-// Dars navigatsiya tugmalarini yangilash (oldingi/keyingi)
+
+// ====================================================
+// 8-QISM: DARS NAVIGATSIYASI
+// ====================================================
+
 function yangilaNavigatsiya() {
-    const oldingiTugma = document.getElementById('oldingi-dars-btn');
-    const keyingiTugma = document.getElementById('keyingi-dars-btn');
-    const darsHisobi   = document.getElementById('dars-hisobi');
+    const oldingiTugma = element('oldingi-dars-btn');
+    const keyingiTugma = element('keyingi-dars-btn');
+    const darsHisobi = element('dars-hisobi');
 
-    // Dars hisoblagichi: "1 / 3" shaklida
-    darsHisobi.textContent =
-        (joriyDarsIndeksi + 1) + ' / ' + darslar.length;
+    const jamiDarslar = darslarRoyxati.length;
 
-    // Birinchi darsdaman — "Oldingi" tugmasini o'chiramiz
-    if (joriyDarsIndeksi === 0) {
-        oldingiTugma.disabled = true;
-        oldingiTugma.style.opacity = '0.4';
-    } else {
-        oldingiTugma.disabled = false;
-        oldingiTugma.style.opacity = '1';
+    if (darsHisobi) {
+        darsHisobi.textContent =
+            jamiDarslar > 0
+                ? (joriyDarsIndeksi + 1) + ' / ' + jamiDarslar
+                : '0 / 0';
     }
 
-    // Oxirgi darsdaman — "Keyingi" tugmasini o'chiramiz
-    if (joriyDarsIndeksi === darslar.length - 1) {
-        keyingiTugma.disabled = true;
-        keyingiTugma.style.opacity = '0.4';
-    } else {
-        keyingiTugma.disabled = false;
-        keyingiTugma.style.opacity = '1';
+    if (oldingiTugma) {
+        oldingiTugma.disabled = joriyDarsIndeksi === 0;
+        oldingiTugma.style.opacity = joriyDarsIndeksi === 0 ? '0.4' : '1';
+    }
+
+    if (keyingiTugma) {
+        keyingiTugma.disabled = joriyDarsIndeksi >= jamiDarslar - 1;
+        keyingiTugma.style.opacity =
+            joriyDarsIndeksi >= jamiDarslar - 1 ? '0.4' : '1';
     }
 }
 
-// Oldingi darsga o'tish
 function oldingiDars() {
     if (joriyDarsIndeksi > 0) {
         joriyDarsIndeksi--;
@@ -187,178 +281,236 @@ function oldingiDars() {
     }
 }
 
-// Keyingi darsga o'tish
 function keyingiDars() {
-    if (joriyDarsIndeksi < darslar.length - 1) {
+    if (joriyDarsIndeksi < darslarRoyxati.length - 1) {
         joriyDarsIndeksi++;
         darsniChiqar();
     }
 }
 
-// "Testni boshlash" tugmasi bosilganda
+
+// ====================================================
+// 9-QISM: TESTNI BOSHLASH VA CHIQARISH
+// ====================================================
+
 function testniBoshlash() {
-    darsOqildi = true;
+    const dars = joriyDarsniOl();
+
+    if (!dars || !Array.isArray(dars.testlar) || dars.testlar.length === 0) {
+        alert('Bu dars uchun test savollari hali kiritilmagan.');
+        return;
+    }
+
+    testQisminiTikla();
+
     joriyTestIndeksi = 0;
+    javobBerildi = false;
 
-    // Dars tugmasini yashiramiz, test qismini ko'rsatamiz
-    document.getElementById('dars-tugmasi').classList.add('hidden');
-    document.getElementById('test-qismi').classList.remove('hidden');
+    const darsTugmasi = element('dars-tugmasi');
+    const testQismi = element('test-qismi');
 
-    // Birinchi testni chiqaramiz
+    if (darsTugmasi) {
+        darsTugmasi.classList.add('hidden');
+    }
+
+    if (testQismi) {
+        testQismi.classList.remove('hidden');
+    }
+
     testniChiqar();
 }
 
-// Testni ekranga chiqarish
 function testniChiqar() {
+    const dars = joriyDarsniOl();
 
-    const dars = darslar[joriyDarsIndeksi];
+    if (!dars || !Array.isArray(dars.testlar)) return;
+
     const test = dars.testlar[joriyTestIndeksi];
+
+    if (!test) return;
 
     javobBerildi = false;
 
-    // Test raqami: "Test 1 / 3" shaklida
-    document.getElementById('test-raqam').textContent =
-        'Test ' + (joriyTestIndeksi + 1) + ' / ' + dars.testlar.length;
+    const testRaqam = element('test-raqam');
+    const testSavol = element('test-savol');
+    const testJavoblar = element('test-javoblar');
+    const testNatija = element('test-natija');
+    const keyingiTestBtn = element('keyingi-test-btn');
 
-    // Savol matnini chiqaramiz
-    document.getElementById('test-savol').textContent = test.savol;
+    if (testRaqam) {
+        testRaqam.textContent =
+            'Test ' + (joriyTestIndeksi + 1) + ' / ' + dars.testlar.length;
+    }
 
-    // Natija qismini yashiramiz
-    const natija = document.getElementById('test-natija');
-    natija.classList.add('hidden');
-    natija.classList.remove('togri-rang', 'notogri-rang');
+    if (testSavol) {
+        testSavol.textContent = xavfsizMatn(test.savol, 'Savol kiritilmagan.');
+    }
 
-    // Keyingi savol tugmasini yashiramiz
-    document.getElementById('keyingi-test-btn').classList.add('hidden');
+    if (testNatija) {
+        testNatija.classList.add('hidden');
+        testNatija.classList.remove('togri-rang', 'notogri-rang');
+    }
 
-    // Javob tugmalarini yaratamiz
-    const javoblarDiv = document.getElementById('test-javoblar');
-    javoblarDiv.innerHTML = ''; // Avvalgini tozalaymiz
+    if (keyingiTestBtn) {
+        keyingiTestBtn.classList.add('hidden');
+        keyingiTestBtn.textContent = 'Keyingi savol ➡️';
+    }
 
-    test.javoblar.forEach(function(javobMatni, indeks) {
+    if (!testJavoblar) return;
 
+    testJavoblar.innerHTML = '';
+
+    const javoblar = Array.isArray(test.javoblar) ? test.javoblar : [];
+
+    javoblar.forEach(function (javobMatni, indeks) {
         const tugma = document.createElement('button');
         tugma.className = 'javob-tugma';
         tugma.textContent = (indeks + 1) + '. ' + javobMatni;
 
-        // Tugma bosilganda javobni tekshiramiz
-        tugma.addEventListener('click', function() {
+        tugma.addEventListener('click', function () {
             javobniTekshir(indeks, tugma);
         });
 
-        javoblarDiv.appendChild(tugma);
+        testJavoblar.appendChild(tugma);
     });
 }
 
-// Javobni tekshirish
-function javobniTekshir(tanlangan, bosildigan_tugma) {
 
-    // Agar javob allaqachon berilgan bo'lsa — qayta bosilmasin
+// ====================================================
+// 10-QISM: JAVOBNI TEKSHIRISH
+// ====================================================
+
+function javobniTekshir(tanlanganIndeks, bosilganTugma) {
     if (javobBerildi) return;
+
     javobBerildi = true;
 
-    const dars = darslar[joriyDarsIndeksi];
+    const dars = joriyDarsniOl();
+
+    if (!dars || !Array.isArray(dars.testlar)) return;
+
     const test = dars.testlar[joriyTestIndeksi];
 
-    // Barcha tugmalarni olamiz va o'chiramiz (disabled)
-    const barcha_tugmalar = document.querySelectorAll('.javob-tugma');
-    barcha_tugmalar.forEach(function(t) {
-        t.disabled = true;
+    if (!test) return;
+
+    const togriIndeks = Number(test.togri);
+
+    const barchaTugmalar = document.querySelectorAll('.javob-tugma');
+
+    barchaTugmalar.forEach(function (tugma) {
+        tugma.disabled = true;
     });
 
-    // To'g'ri javob tugmasini har doim yashil qilamiz
-    barcha_tugmalar[test.togri].classList.add('togri-javob');
+    if (barchaTugmalar[togriIndeks]) {
+        barchaTugmalar[togriIndeks].classList.add('togri-javob');
+    }
 
-    // Natija bo'limi
-    const natija      = document.getElementById('test-natija');
-    const natijaMatni = document.getElementById('test-natija-matni');
+    const natija = element('test-natija');
+    const natijaMatni = element('test-natija-matni');
 
-    natija.classList.remove('hidden');
+    if (natija) {
+        natija.classList.remove('hidden');
+    }
 
-    if (tanlangan === test.togri) {
-        // ✅ TO'G'RI JAVOB
-        bosildigan_tugma.classList.add('togri-javob');
-        natija.classList.add('togri-rang');
-        natijaMatni.textContent = '✅ To\'g\'ri! +10 ball qo\'shildi!';
+    if (tanlanganIndeks === togriIndeks) {
+        if (bosilganTugma) {
+            bosilganTugma.classList.add('togri-javob');
+        }
 
-        // 10 ball qo'shamiz va saqlaymiz
+        if (natija) {
+            natija.classList.add('togri-rang');
+        }
+
+        if (natijaMatni) {
+            natijaMatni.textContent = '✅ To‘g‘ri! +10 ball qo‘shildi!';
+        }
+
         joriyBal += 10;
         balniSaqla(joriyBal);
         balniChiqar();
 
     } else {
-        // ❌ NOTO'G'RI JAVOB
-        bosildigan_tugma.classList.add('notogri-javob');
-        natija.classList.add('notogri-rang');
-        natijaMatni.textContent = '❌ Noto\'g\'ri. To\'g\'ri javob yashil bilan ko\'rsatildi.';
+        if (bosilganTugma) {
+            bosilganTugma.classList.add('notogri-javob');
+        }
+
+        if (natija) {
+            natija.classList.add('notogri-rang');
+        }
+
+        if (natijaMatni) {
+            natijaMatni.textContent =
+                '❌ Noto‘g‘ri. To‘g‘ri javob yashil bilan ko‘rsatildi.';
+        }
     }
 
-    // Keyingi tugmani ko'rsatamiz
-    const keyingiBtn = document.getElementById('keyingi-test-btn');
-    keyingiBtn.classList.remove('hidden');
+    const keyingiTestBtn = element('keyingi-test-btn');
 
-    // Oxirgi test bo'lsa tugma matnini o'zgartiramiz
-    if (joriyTestIndeksi === dars.testlar.length - 1) {
-        keyingiBtn.textContent = '🏁 Darsni yakunlash';
-    } else {
-        keyingiBtn.textContent = 'Keyingi savol ➡️';
+    if (keyingiTestBtn) {
+        keyingiTestBtn.classList.remove('hidden');
+
+        if (joriyTestIndeksi === dars.testlar.length - 1) {
+            keyingiTestBtn.textContent = '🏁 Darsni yakunlash';
+        } else {
+            keyingiTestBtn.textContent = 'Keyingi savol ➡️';
+        }
     }
 }
 
-// Keyingi test savoliga o'tish
 function keyingiTest() {
+    const dars = joriyDarsniOl();
 
-    const dars = darslar[joriyDarsIndeksi];
+    if (!dars || !Array.isArray(dars.testlar)) return;
 
     if (joriyTestIndeksi < dars.testlar.length - 1) {
-        // Hali savollar bor — keyingisiga o'tamiz
         joriyTestIndeksi++;
         testniChiqar();
-
     } else {
-        // Barcha savollar tugadi — dars yakunlandi
         darsYakunlandi();
     }
 }
 
-// Dars yakunlanganda
+
+// ====================================================
+// 11-QISM: DARS YAKUNLASH
+// ====================================================
+
 function darsYakunlandi() {
+    const testQismi = element('test-qismi');
 
-    const testQismi = document.getElementById('test-qismi');
+    if (!testQismi) return;
 
-    // Yakunlash xabarini chiqaramiz
+    const oxirgiDarsmi = joriyDarsIndeksi >= darslarRoyxati.length - 1;
+
     testQismi.innerHTML =
         '<div class="yakunlash-xabar">' +
             '<div class="yakunlash-emoji">🎉</div>' +
             '<h3>Dars yakunlandi!</h3>' +
-            '<p>Siz bu darsni muvaffaqiyatli tugatdingiz.</p>' +
+            '<p>Siz bu darsni muvaffaqiyatli yakunladingiz.</p>' +
             '<p class="joriy-bal-yak">Umumiy balingiz: <strong>' + joriyBal + ' ball</strong></p>' +
             '<button class="keyingi-dars-yak-btn" onclick="keyingiDarsYakundan()">' +
-                (joriyDarsIndeksi < darslar.length - 1
-                    ? '➡️ Keyingi Darsga O\'tish'
-                    : '🏆 Reytingni Ko\'rish') +
+                (oxirgiDarsmi ? '🏆 Reytingni Ko‘rish' : '➡️ Keyingi Darsga O‘tish') +
             '</button>' +
         '</div>';
 }
 
-// Yakunlash xabaridan keyingi darsga yoki reytingga o'tish
 function keyingiDarsYakundan() {
-
-    if (joriyDarsIndeksi < darslar.length - 1) {
+    if (joriyDarsIndeksi < darslarRoyxati.length - 1) {
         joriyDarsIndeksi++;
         darsniChiqar();
-        // Test qismini yashirib, darsni ko'rsatamiz
-        document.getElementById('test-qismi').classList.add('hidden');
-        document.getElementById('dars-tugmasi').classList.remove('hidden');
     } else {
-        // Oxirgi dars tugadi — reytingga o'tamiz
         showTab('reyting');
     }
 }
 
-// Ballarni ekranda ko'rsatish
+
+// ====================================================
+// 12-QISM: BALLARNI KO‘RSATISH
+// ====================================================
+
 function balniChiqar() {
-    const balElement = document.getElementById('joriy-bal');
+    const balElement = element('joriy-bal');
+
     if (balElement) {
         balElement.textContent = joriyBal;
     }
@@ -366,28 +518,24 @@ function balniChiqar() {
 
 
 // ====================================================
-// 7-QISM: REYTING BO'LIMI
+// 13-QISM: REYTING BO‘LIMI
 // ====================================================
 
-// Namuna peshqadamlar ro'yxati
-// Haqiqiy loyihada bu serverdan keladi
 const peshqadamlar = [
-    { ism: 'Abdulloh T.',  ball: 320, emoji: '🥇' },
-    { ism: 'Zulfiya M.',   ball: 280, emoji: '🥈' },
-    { ism: 'Sardor K.',    ball: 250, emoji: '🥉' },
-    { ism: 'Nilufar R.',   ball: 210, emoji: '4️⃣'  },
-    { ism: 'Bobur A.',     ball: 180, emoji: '5️⃣'  },
-    { ism: 'Kamola S.',    ball: 150, emoji: '6️⃣'  },
-    { ism: 'Jasur N.',     ball: 120, emoji: '7️⃣'  },
-    { ism: 'Madina O.',    ball: 100, emoji: '8️⃣'  },
-    { ism: 'Sherzod B.',   ball: 80,  emoji: '9️⃣'  },
-    { ism: 'Hulkar Y.',    ball: 60,  emoji: '🔟'  }
+    { ism: 'Abdulloh T.', ball: 320 },
+    { ism: 'Zulfiya M.', ball: 280 },
+    { ism: 'Sardor K.', ball: 250 },
+    { ism: 'Nilufar R.', ball: 210 },
+    { ism: 'Bobur A.', ball: 180 },
+    { ism: 'Kamola S.', ball: 150 },
+    { ism: 'Jasur N.', ball: 120 },
+    { ism: 'Madina O.', ball: 100 },
+    { ism: 'Sherzod B.', ball: 80 },
+    { ism: 'Hulkar Y.', ball: 60 }
 ];
 
 function reytingniChiqar() {
-
-    // Foydalanuvchini ro'yxatga qo'shamiz yoki yangilaymiz
-    const mavjud = peshqadamlar.find(function(p) {
+    const mavjud = peshqadamlar.find(function (p) {
         return p.ism === foydalanuvchiIsmi;
     });
 
@@ -395,111 +543,129 @@ function reytingniChiqar() {
         mavjud.ball = joriyBal;
     } else {
         peshqadamlar.push({
-            ism:   foydalanuvchiIsmi,
-            ball:  joriyBal,
-            emoji: '👤'
+            ism: foydalanuvchiIsmi,
+            ball: joriyBal
         });
     }
 
-    // Ballar bo'yicha saralamiz (kattadan kichikka)
-    peshqadamlar.sort(function(a, b) { return b.ball - a.ball; });
+    peshqadamlar.sort(function (a, b) {
+        return b.ball - a.ball;
+    });
 
-    // Ro'yxatni ekranga chiqaramiz
-    const royxatDiv = document.getElementById('reyting-royxati');
+    const royxatDiv = element('reyting-royxati');
+
+    if (!royxatDiv) return;
+
     royxatDiv.innerHTML = '';
 
-    peshqadamlar.forEach(function(kishi, indeks) {
+    peshqadamlar.forEach(function (kishi, indeks) {
+        const orn = indeks + 1;
 
-        const orn  = indeks + 1;
         const qator = document.createElement('div');
         qator.className = 'reyting-qatori';
 
-        // Hozirgi foydalanuvchi — ajratib ko'rsatamiz
         if (kishi.ism === foydalanuvchiIsmi) {
             qator.classList.add('mening-qatorim');
         }
 
-        // Birinchi 3 o'rin uchun maxsus belgi
         let ornBelgi = orn + '.';
+
         if (orn === 1) ornBelgi = '🥇';
         if (orn === 2) ornBelgi = '🥈';
         if (orn === 3) ornBelgi = '🥉';
 
         qator.innerHTML =
-            '<span class="reyting-orn">'  + ornBelgi     + '</span>' +
-            '<span class="reyting-ism">'  + kishi.ism    + '</span>' +
-            '<span class="reyting-ball">' + kishi.ball   + ' ball</span>';
+            '<span class="reyting-orn">' + ornBelgi + '</span>' +
+            '<span class="reyting-ism">' + kishi.ism + '</span>' +
+            '<span class="reyting-ball">' + kishi.ball + ' ball</span>';
 
         royxatDiv.appendChild(qator);
 
-        // Foydalanuvchining o'rnini "Mening o'rnim" bo'limida chiqaramiz
         if (kishi.ism === foydalanuvchiIsmi) {
-            document.getElementById('mening-ornim-raqam').textContent = orn + '-o\'rin';
-            document.getElementById('mening-balim').textContent        = joriyBal + ' ball';
+            const meningOrnim = element('mening-ornim-raqam');
+            const meningBalim = element('mening-balim');
+
+            if (meningOrnim) {
+                meningOrnim.textContent = orn + '-o‘rin';
+            }
+
+            if (meningBalim) {
+                meningBalim.textContent = joriyBal + ' ball';
+            }
         }
     });
 }
 
 
 // ====================================================
-// 8-QISM: DO'STLAR BO'LIMI (REFERAL)
+// 14-QISM: DO‘STLAR / REFERAL BO‘LIMI
 // ====================================================
 
 function dostlarBoliminiYukla() {
+    const botNomi = 'TafakkurMoliyaBot';
+    const referalUrl =
+        'https://t.me/' + botNomi + '?start=ref_' + foydalanuvchiId;
 
-    const botNomi    = 'TafakkurMoliyaBot'; // O'zingizning bot nomingiz
-    const referalUrl = 'https://t.me/' + botNomi + '?start=ref_' + foydalanuvchiId;
+    const input = element('referal-havola-input');
 
-    // Referal havolani input ga o'rnatamiz
-    const input = document.getElementById('referal-havola-input');
     if (input) {
         input.value = referalUrl;
     }
 
-    // Referal statistikani chiqaramiz
-    const referalSoni = parseInt(localStorage.getItem('tafakkur_referal_' + foydalanuvchiId) || '0');
-    const elem1 = document.getElementById('taklif-soni');
-    const elem2 = document.getElementById('referal-ball');
-    if (elem1) elem1.textContent = referalSoni;
-    if (elem2) elem2.textContent = referalSoni * 10;
+    const referalSoni = parseInt(
+        localStorage.getItem('tafakkur_referal_' + foydalanuvchiId) || '0',
+        10
+    );
+
+    const taklifSoni = element('taklif-soni');
+    const referalBall = element('referal-ball');
+
+    if (taklifSoni) {
+        taklifSoni.textContent = referalSoni;
+    }
+
+    if (referalBall) {
+        referalBall.textContent = referalSoni * 10;
+    }
 }
 
-// Havolani nusxalash
 function havolaNusxala() {
+    const input = element('referal-havola-input');
+    const xabar = element('nusxalandi-xabar');
 
-    const input  = document.getElementById('referal-havola-input');
-    const xabar  = document.getElementById('nusxalandi-xabar');
+    if (!input) return;
+
     const havola = input.value;
 
     if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(havola).then(function() {
+        navigator.clipboard.writeText(havola).then(function () {
             nusxalandiKorsat(xabar);
         });
     } else {
-        // Eski usul
         input.select();
         document.execCommand('copy');
         nusxalandiKorsat(xabar);
     }
 }
 
-// "Nusxalandi!" xabarini 2 soniya ko'rsatish
 function nusxalandiKorsat(xabar) {
+    if (!xabar) return;
+
     xabar.classList.remove('hidden');
-    setTimeout(function() {
+
+    setTimeout(function () {
         xabar.classList.add('hidden');
     }, 2000);
 }
 
-// Telegram orqali ulashish
 function telegramUlash() {
+    const botNomi = 'TafakkurMoliyaBot';
+    const havola = 'https://t.me/' + botNomi + '?start=ref_' + foydalanuvchiId;
 
-    const botNomi  = 'TafakkurMoliyaBot';
-    const havola   = 'https://t.me/' + botNomi + '?start=ref_' + foydalanuvchiId;
-    const matn     =
+    const matn =
         'Assalomu alaykum! 🕌\n' +
-        'Tafakkur Moliya ilovasini sinab ko\'ring!\n' +
-        'Islom moliyasini o\'rganib, ball to\'plang.\n\n' +
+        'Tafakkur Moliya ilovasini sinab ko‘ring!\n' +
+        'Islom moliyasini o‘rganib, ball to‘plang.\n\n' +
         'Mening havolam: ' + havola;
 
     const shareUrl =
@@ -508,29 +674,28 @@ function telegramUlash() {
         '&text=' +
         encodeURIComponent(matn);
 
-    tg.openTelegramLink(shareUrl);
+    if (tg && tg.openTelegramLink) {
+        tg.openTelegramLink(shareUrl);
+    } else {
+        window.open(shareUrl, '_blank');
+    }
 }
 
 
 // ====================================================
-// 9-QISM: ILOVANI ISHGA TUSHIRISH
-// Sahifa to'liq yuklangandan so'ng bajariladi
+// 15-QISM: ILOVANI ISHGA TUSHIRISH
 // ====================================================
 
-window.onload = function() {
+function ilovaniIshgaTushir() {
+    const ismElement = element('foydalanuvchi-ismi');
 
-    // Birinchi darsni chiqaramiz
-    darsniChiqar();
-
-    // Foydalanuvchi ismini header da ko'rsatamiz
-    const ismElement = document.getElementById('foydalanuvchi-ismi');
     if (ismElement) {
         ismElement.textContent = foydalanuvchiIsmi;
     }
 
-    // Joriy ballarni ko'rsatamiz
     balniChiqar();
-
-    // Ta'lim tabini boshida faol qilamiz
+    darsniChiqar();
     showTab('talim');
-};
+}
+
+document.addEventListener('DOMContentLoaded', ilovaniIshgaTushir);
