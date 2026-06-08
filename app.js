@@ -113,6 +113,17 @@ function joriyDarsniOl() {
     if (!darsMavjudmi()) return null;
     return darslarRoyxati[joriyDarsIndeksi] || null;
 }
+function ballKaliti(lessonId, testIndex) {
+    return 'tafakkur_scored_' + foydalanuvchiId + '_' + lessonId + '_' + testIndex;
+}
+
+function ballOldinBerilganmi(lessonId, testIndex) {
+    return localStorage.getItem(ballKaliti(lessonId, testIndex)) === 'yes';
+}
+
+function ballBerilganDebBelgila(lessonId, testIndex) {
+    localStorage.setItem(ballKaliti(lessonId, testIndex), 'yes');
+}
 
 function testQisminiTikla() {
     const testQismi = element('test-qismi');
