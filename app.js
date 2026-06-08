@@ -249,19 +249,26 @@ function darsniChiqar() {
     const darsTugmasi = element('dars-tugmasi');
     const testniBoshlashBtn = element('testni-boshlash-btn');
 
-    if (darsRaqam) {
+   if (darsRaqam) {
     const progressFoiz = Math.round(((joriyDarsIndeksi + 1) / darslarRoyxati.length) * 100);
 
     darsRaqam.innerHTML = `
         <span class="dars-meta-qator">
-            ${joriyDarsIndeksi + 1}-Dars • ${modulNominiOl(dars.module_id)}
+            ${joriyDarsIndeksi + 1}-DARS
         </span>
+
+        <span class="modul-nomi">
+            Modul: ${modulNominiOl(dars.module_id)}
+        </span>
+
         <span class="dars-daraja">
             ${darajaNominiOl(dars.level)}
         </span>
+
         <div class="progress-wrapper">
             <div class="progress-bar" style="width: ${progressFoiz}%"></div>
         </div>
+
         <span class="progress-foiz">${progressFoiz}% yakunlandi</span>
     `;
 }
