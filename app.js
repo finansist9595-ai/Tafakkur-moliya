@@ -367,6 +367,78 @@ function keyingiDars() {
     }
 }
 
+// ====================================================
+// DARS KATALOGI
+// ====================================================
+
+function katalogniOchYop() {
+    const katalog = element('darslar-katalogi');
+
+    if (!katalog) return;
+
+    if (katalog.classList.contains('hidden')) {
+        katalogniChiqar();
+        katalog.classList.remove('hidden');
+    } else {
+        katalog.classList.add('hidden');
+    }
+}
+
+function katalogniChiqar() {
+    const katalog = element('darslar-katalogi');
+
+    if (!katalog || !darsMavjudmi()) return;
+
+    katalog.innerHTML = '';
+
+    const sarlavha = document.createElement('div');
+    sarlavha.className = 'katalog-sarlavha';
+    sarlavha.textContent = 'Darsni tanlang';
+    katalog.appendChild(sarlavha);
+
+    darslarRoyxati.forEach(function (dars, indeks) {
+        const tugma = document.createElement('button');
+        tugma.className = 'katalog-dars-tugma';
+
+        if (indeks === joriyDarsIndeksi) {
+            tugma.classList.add('active-katalog-dars');
+        }
+
+        tugma.innerHTML = `
+            <span class="katalog-dars-raqam">${indeks + 1}-dars</span>
+            <span class="katalog-dars-nomi">
+                ${xavfsizMatn(dars.emoji, '📘')} ${xavfsizMatn(dars.mavzu, 'Dars mavzusi')}
+            </span>
+            <span class="katalog-dars-meta">
+                ${modulNominiOl(dars.module_id)} • ${darajaNominiOl(dars.level)}
+            </span>
+        `;
+
+        tugma.onclick = function () {
+            darsgaOt(indeks);
+        };
+
+        katalog.appendChild(tugma);
+    });
+}
+
+function darsgaOt(indeks) {
+    if (indeks < 0 || indeks >= darslarRoyxati.length) return;
+
+    joriyDarsIndeksi = indeks;
+    darsniChiqar();
+
+    const katalog = element('darslar-katalogi');
+
+    if (katalog) {
+        katalog.classList.add('hidden');
+    }
+
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+}
 
 // ====================================================
 // 12-QISM: TESTNI BOSHLASH VA CHIQARISH
