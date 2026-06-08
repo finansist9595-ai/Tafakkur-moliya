@@ -739,3 +739,20 @@ body {
     color: #2d6a4f;
     margin-bottom: 10px;
 }
+
+#keyingi-test-btn {
+    width: 100%;
+    margin-top: 14px;
+    padding: 14px 18px;
+    border: none;
+    border-radius: 14px;
+    background: #1b4332;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+#keyingi-test-btn.hidden {
+    display: none !important;
+}
