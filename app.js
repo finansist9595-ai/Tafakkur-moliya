@@ -105,6 +105,7 @@ function darajaNominiOl(level) {
 
     return darajalar[level] || 'Boshlang‘ich';
 }
+
 function darsMavjudmi() {
     return darslarRoyxati.length > 0;
 }
@@ -113,6 +114,12 @@ function joriyDarsniOl() {
     if (!darsMavjudmi()) return null;
     return darslarRoyxati[joriyDarsIndeksi] || null;
 }
+
+
+// ====================================================
+// 6-QISM: TAKRORIY BALL BERILISHINI TO‘XTATISH
+// ====================================================
+
 function ballKaliti(lessonId, testIndex) {
     return 'tafakkur_scored_' + foydalanuvchiId + '_' + lessonId + '_' + testIndex;
 }
@@ -124,6 +131,11 @@ function ballOldinBerilganmi(lessonId, testIndex) {
 function ballBerilganDebBelgila(lessonId, testIndex) {
     localStorage.setItem(ballKaliti(lessonId, testIndex), 'yes');
 }
+
+
+// ====================================================
+// 7-QISM: TEST QISMINI TIKLASH
+// ====================================================
 
 function testQisminiTikla() {
     const testQismi = element('test-qismi');
@@ -142,19 +154,12 @@ function testQisminiTikla() {
         <div id="test-natija" class="hidden">
             <p id="test-natija-matni"></p>
         </div>
-
-        <button
-            id="keyingi-test-btn"
-            class="hidden"
-            onclick="keyingiTest()">
-            Keyingi savol ➡️
-        </button>
     `;
 }
 
 
 // ====================================================
-// 6-QISM: TAB NAVIGATSIYA
+// 8-QISM: TAB NAVIGATSIYA
 // ====================================================
 
 function showTab(tabNomi) {
@@ -191,7 +196,7 @@ function showTab(tabNomi) {
 
 
 // ====================================================
-// 7-QISM: DARSNI EKRANGA CHIQARISH
+// 9-QISM: DISCLAIMER KARTASI
 // ====================================================
 
 function disclaimerKartaniChiqar(dars) {
@@ -199,7 +204,7 @@ function disclaimerKartaniChiqar(dars) {
 
     if (!darsKartasi) return;
 
-    let eskiKarta = element('disclaimer-karta');
+    const eskiKarta = element('disclaimer-karta');
     if (eskiKarta) {
         eskiKarta.remove();
     }
@@ -220,6 +225,12 @@ function disclaimerKartaniChiqar(dars) {
 
     darsKartasi.appendChild(karta);
 }
+
+
+// ====================================================
+// 10-QISM: DARSNI EKRANGA CHIQARISH
+// ====================================================
+
 function darsniChiqar() {
     testQisminiTikla();
 
@@ -232,14 +243,13 @@ function darsniChiqar() {
         if (sarlavha) sarlavha.textContent = 'Darslar yuklanmadi';
         if (matn) {
             matn.textContent =
-                'lessons.js faylida darslar topilmadi. Iltimos, lessons.js fayli index.html ichida app.js dan oldin ulanganini tekshiring.';
+                'lessons.js faylida darslar topilmadi. lessons.js fayli index.html ichida app.js dan oldin ulanganini tekshiring.';
         }
 
         return;
     }
 
     const dars = joriyDarsniOl();
-
     if (!dars) return;
 
     const darsRaqam = element('dars-raqam');
@@ -249,29 +259,29 @@ function darsniChiqar() {
     const darsTugmasi = element('dars-tugmasi');
     const testniBoshlashBtn = element('testni-boshlash-btn');
 
-   if (darsRaqam) {
-    const progressFoiz = Math.round(((joriyDarsIndeksi + 1) / darslarRoyxati.length) * 100);
+    if (darsRaqam) {
+        const progressFoiz = Math.round(((joriyDarsIndeksi + 1) / darslarRoyxati.length) * 100);
 
-    darsRaqam.innerHTML = `
-        <span class="dars-meta-qator">
-            ${joriyDarsIndeksi + 1}-DARS
-        </span>
+        darsRaqam.innerHTML = `
+            <span class="dars-meta-qator">
+                ${joriyDarsIndeksi + 1}-DARS
+            </span>
 
-        <span class="modul-nomi">
-            Modul: ${modulNominiOl(dars.module_id)}
-        </span>
+            <span class="modul-nomi">
+                Modul: ${modulNominiOl(dars.module_id)}
+            </span>
 
-        <span class="dars-daraja">
-            ${darajaNominiOl(dars.level)}
-        </span>
+            <span class="dars-daraja">
+                ${darajaNominiOl(dars.level)}
+            </span>
 
-        <div class="progress-wrapper">
-            <div class="progress-bar" style="width: ${progressFoiz}%"></div>
-        </div>
+            <div class="progress-wrapper">
+                <div class="progress-bar" style="width: ${progressFoiz}%"></div>
+            </div>
 
-        <span class="progress-foiz">${progressFoiz}% yakunlandi</span>
-    `;
-}
+            <span class="progress-foiz">${progressFoiz}% yakunlandi</span>
+        `;
+    }
 
     if (darsSarlavha) {
         darsSarlavha.textContent =
@@ -279,11 +289,11 @@ function darsniChiqar() {
     }
 
     if (darsMatni) {
-    darsMatni.textContent = xavfsizMatn(dars.matn, 'Dars matni kiritilmagan.');
-    darsMatni.style.whiteSpace = 'pre-line';
-}
+        darsMatni.textContent = xavfsizMatn(dars.matn, 'Dars matni kiritilmagan.');
+        darsMatni.style.whiteSpace = 'pre-line';
+    }
 
-disclaimerKartaniChiqar(dars);
+    disclaimerKartaniChiqar(dars);
 
     if (testQismi) {
         testQismi.classList.add('hidden');
@@ -314,7 +324,7 @@ disclaimerKartaniChiqar(dars);
 
 
 // ====================================================
-// 8-QISM: DARS NAVIGATSIYASI
+// 11-QISM: DARS NAVIGATSIYASI
 // ====================================================
 
 function yangilaNavigatsiya() {
@@ -359,7 +369,7 @@ function keyingiDars() {
 
 
 // ====================================================
-// 9-QISM: TESTNI BOSHLASH VA CHIQARISH
+// 12-QISM: TESTNI BOSHLASH VA CHIQARISH
 // ====================================================
 
 function testniBoshlash() {
@@ -395,7 +405,6 @@ function testniChiqar() {
     if (!dars || !Array.isArray(dars.testlar)) return;
 
     const test = dars.testlar[joriyTestIndeksi];
-
     if (!test) return;
 
     javobBerildi = false;
@@ -404,7 +413,6 @@ function testniChiqar() {
     const testSavol = element('test-savol');
     const testJavoblar = element('test-javoblar');
     const testNatija = element('test-natija');
-    const keyingiTestBtn = element('keyingi-test-btn');
 
     if (testRaqam) {
         testRaqam.textContent =
@@ -418,11 +426,6 @@ function testniChiqar() {
     if (testNatija) {
         testNatija.classList.add('hidden');
         testNatija.classList.remove('togri-rang', 'notogri-rang');
-    }
-
-    if (keyingiTestBtn) {
-        keyingiTestBtn.classList.add('hidden');
-        keyingiTestBtn.textContent = 'Keyingi savol ➡️';
     }
 
     if (!testJavoblar) return;
@@ -446,18 +449,17 @@ function testniChiqar() {
 
 
 // ====================================================
-// 10-QISM: JAVOBNI TEKSHIRISH
+// 13-QISM: KEYINGI TEST TUGMASI
 // ====================================================
 
 function keyingiTestTugmasiniChiqar(dars) {
-    let eskiBtn = element('keyingi-test-btn');
+    const eskiBtn = element('keyingi-test-btn');
 
     if (eskiBtn) {
         eskiBtn.remove();
     }
 
     const testQismi = element('test-qismi');
-
     if (!testQismi) return;
 
     const btn = document.createElement('button');
@@ -476,6 +478,12 @@ function keyingiTestTugmasiniChiqar(dars) {
 
     testQismi.appendChild(btn);
 }
+
+
+// ====================================================
+// 14-QISM: JAVOBNI TEKSHIRISH
+// ====================================================
+
 function javobniTekshir(tanlanganIndeks, bosilganTugma) {
     if (javobBerildi) return;
 
@@ -486,7 +494,6 @@ function javobniTekshir(tanlanganIndeks, bosilganTugma) {
     if (!dars || !Array.isArray(dars.testlar)) return;
 
     const test = dars.testlar[joriyTestIndeksi];
-
     if (!test) return;
 
     const togriIndeks = Number(test.togri);
@@ -552,6 +559,12 @@ function javobniTekshir(tanlanganIndeks, bosilganTugma) {
     }
 
     keyingiTestTugmasiniChiqar(dars);
+}
+
+
+// ====================================================
+// 15-QISM: KEYINGI TEST
+// ====================================================
 
 function keyingiTest() {
     const dars = joriyDarsniOl();
@@ -568,7 +581,7 @@ function keyingiTest() {
 
 
 // ====================================================
-// 11-QISM: DARS YAKUNLASH
+// 16-QISM: DARS YAKUNLASH
 // ====================================================
 
 function darsYakunlandi() {
@@ -585,7 +598,7 @@ function darsYakunlandi() {
             '<p>Siz bu darsni muvaffaqiyatli yakunladingiz.</p>' +
             '<p class="joriy-bal-yak">Umumiy balingiz: <strong>' + joriyBal + ' ball</strong></p>' +
             '<button class="keyingi-dars-yak-btn" onclick="keyingiDarsYakundan()">' +
-                (oxirgiDarsmi ? '🏆 Reytingni Ko‘rish' : '➡️ Keyingi Darsga O‘tish') +
+                (oxirgiDarsmi ? '🏆 Reytingni ko‘rish' : '➡️ Keyingi darsga o‘tish') +
             '</button>' +
         '</div>';
 }
@@ -601,7 +614,7 @@ function keyingiDarsYakundan() {
 
 
 // ====================================================
-// 12-QISM: BALLARNI KO‘RSATISH
+// 17-QISM: BALLARNI KO‘RSATISH
 // ====================================================
 
 function balniChiqar() {
@@ -614,7 +627,7 @@ function balniChiqar() {
 
 
 // ====================================================
-// 13-QISM: REYTING BO‘LIMI
+// 18-QISM: REYTING BO‘LIMI
 // ====================================================
 
 const peshqadamlar = [
@@ -694,7 +707,7 @@ function reytingniChiqar() {
 
 
 // ====================================================
-// 14-QISM: DO‘STLAR / REFERAL BO‘LIMI
+// 19-QISM: DO‘STLAR / REFERAL BO‘LIMI
 // ====================================================
 
 function dostlarBoliminiYukla() {
@@ -779,7 +792,7 @@ function telegramUlash() {
 
 
 // ====================================================
-// 15-QISM: ILOVANI ISHGA TUSHIRISH
+// 20-QISM: ILOVANI ISHGA TUSHIRISH
 // ====================================================
 
 function ilovaniIshgaTushir() {
