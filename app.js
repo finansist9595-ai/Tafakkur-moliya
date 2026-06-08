@@ -132,6 +132,49 @@ function ballBerilganDebBelgila(lessonId, testIndex) {
     localStorage.setItem(ballKaliti(lessonId, testIndex), 'yes');
 }
 
+// ====================================================
+// DARS TUGALLANGANINI SAQLASH
+// ====================================================
+
+function tugallanganKalit() {
+    return 'tafakkur_completed_lessons_' + foydalanuvchiId;
+}
+
+function tugallanganDarslarniYukla() {
+    const saqlangan = localStorage.getItem(tugallanganKalit());
+
+    try {
+        const royxat = JSON.parse(saqlangan || '[]');
+        return Array.isArray(royxat) ? royxat : [];
+    } catch (e) {
+        return [];
+    }
+}
+
+function tugallanganDarslarniSaqla(royxat) {
+    localStorage.setItem(tugallanganKalit(), JSON.stringify(royxat));
+}
+
+function darsTugallanganmi(lessonId) {
+    const royxat = tugallanganDarslarniYukla();
+    return royxat.includes(String(lessonId));
+}
+
+function darsniTugallanganQil(lessonId) {
+    if (!lessonId) return;
+
+    const royxat = tugallanganDarslarniYukla();
+    const id = String(lessonId);
+
+    if (!royxat.includes(id)) {
+        royxat.push(id);
+        tugallanganDarslarniSaqla(royxat);
+    }
+}
+
+function tugallanganDarslarSoni() {
+    return tugallanganDarslarniYukla().length;
+}
 
 // ====================================================
 // 7-QISM: TEST QISMINI TIKLASH
