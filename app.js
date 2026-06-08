@@ -81,6 +81,30 @@ function xavfsizMatn(qiymat, fallback = '') {
     return String(qiymat);
 }
 
+function modulNominiOl(moduleId) {
+    const modullar = {
+        module_01: 'Islom moliyasi asoslari',
+        module_02: 'Murabaha',
+        module_03: 'Sheriklik modellari',
+        module_04: 'Ijara va sukuk',
+        module_05: 'Takaful',
+        module_06: 'Zakat va waqf',
+        module_07: 'Smart budgeting',
+        module_08: 'Yakuniy case'
+    };
+
+    return modullar[moduleId] || 'Mini dars';
+}
+
+function darajaNominiOl(level) {
+    const darajalar = {
+        beginner: 'Boshlang‘ich',
+        intermediate: 'O‘rta',
+        advanced: 'Murakkab'
+    };
+
+    return darajalar[level] || 'Boshlang‘ich';
+}
 function darsMavjudmi() {
     return darslarRoyxati.length > 0;
 }
