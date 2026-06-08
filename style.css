@@ -732,3 +732,10 @@ body {
     color: #6b7280;
     margin-top: 6px;
 }
+.modul-nomi {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #2d6a4f;
+    margin-bottom: 10px;
+}
