@@ -318,8 +318,12 @@ function darsniChiqar() {
     joriyTestIndeksi = 0;
     javobBerildi = false;
 
-    yangilaNavigatsiya();
-    balniChiqar();
+   yangilaNavigatsiya();
+balniChiqar();
+
+const katalog = element('darslar-katalogi');
+if (katalog && !katalog.classList.contains('hidden')) {
+    katalogniChiqar();
 }
 
 
