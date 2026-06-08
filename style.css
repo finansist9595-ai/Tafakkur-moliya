@@ -740,19 +740,22 @@ body {
     margin-bottom: 10px;
 }
 
-#keyingi-test-btn {
-    width: 100%;
-    margin-top: 14px;
-    padding: 14px 18px;
-    border: none;
-    border-radius: 14px;
-    background: #1b4332;
-    color: #ffffff;
-    font-size: 15px;
-    font-weight: 700;
-    cursor: pointer;
+.keyingi-test-btn-visible {
+    display: block !important;
+    width: 100% !important;
+    margin-top: 16px !important;
+    padding: 15px 18px !important;
+    border: none !important;
+    border-radius: 14px !important;
+    background: #1b4332 !important;
+    color: #ffffff !important;
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    text-align: center !important;
+    cursor: pointer !important;
+    box-shadow: 0 8px 18px rgba(27, 67, 50, 0.18) !important;
 }
 
-#keyingi-test-btn.hidden {
-    display: none !important;
+.keyingi-test-btn-visible:active {
+    transform: scale(0.98);
 }
