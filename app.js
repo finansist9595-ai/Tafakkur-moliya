@@ -477,6 +477,9 @@ function katalogniChiqar() {
             <span class="katalog-dars-meta">
                 ${modulNominiOl(dars.module_id)} • ${darajaNominiOl(dars.level)}
             </span>
+            <span class="katalog-dars-status">
+                ${statusMatni}
+            </span>
         `;
 
         tugma.onclick = function () {
