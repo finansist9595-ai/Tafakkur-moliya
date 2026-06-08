@@ -475,23 +475,34 @@ function javobniTekshir(tanlanganIndeks, bosilganTugma) {
     }
 
     if (tanlanganIndeks === togriIndeks) {
-        if (bosilganTugma) {
-            bosilganTugma.classList.add('togri-javob');
-        }
+    if (bosilganTugma) {
+        bosilganTugma.classList.add('togri-javob');
+    }
 
-        if (natija) {
-            natija.classList.add('togri-rang');
-        }
+    if (natija) {
+        natija.classList.add('togri-rang');
+    }
+
+    const lessonId = dars.id || (joriyDarsIndeksi + 1);
+    const testIndex = joriyTestIndeksi;
+
+    if (!ballOldinBerilganmi(lessonId, testIndex)) {
+        joriyBal += 10;
+        balniSaqla(joriyBal);
+        balBerilganDebBelgila(lessonId, testIndex);
+        balniChiqar();
 
         if (natijaMatni) {
             natijaMatni.textContent = '✅ To‘g‘ri! +10 ball qo‘shildi!';
         }
-
-        joriyBal += 10;
-        balniSaqla(joriyBal);
-        balniChiqar();
-
     } else {
+        if (natijaMatni) {
+            natijaMatni.textContent = '✅ To‘g‘ri! Bu savol uchun ball oldin berilgan.';
+        }
+    }
+
+} else {
+        
         if (bosilganTugma) {
             bosilganTugma.classList.add('notogri-javob');
         }
