@@ -461,7 +461,14 @@ function katalogniChiqar() {
         if (indeks === joriyDarsIndeksi) {
             tugma.classList.add('active-katalog-dars');
         }
+        const tugallangan = dars.id && darsTugallanganmi(dars.id);
 
+        if (tugallangan) {
+        tugma.classList.add('tugallangan-katalog-dars');
+        }
+
+        const statusMatni = tugallangan ? '✅ Tugallangan' : '⏳ Boshlanmagan';
+        
         tugma.innerHTML = `
             <span class="katalog-dars-raqam">${indeks + 1}-dars</span>
             <span class="katalog-dars-nomi">
