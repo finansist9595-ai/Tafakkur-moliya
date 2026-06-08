@@ -759,3 +759,94 @@ body {
 .keyingi-test-btn-visible:active {
     transform: scale(0.98);
 }
+/* ========================================= */
+/* DARSLAR KATALOGI                          */
+/* ========================================= */
+
+#katalog-bloki {
+    margin-bottom: 14px;
+}
+
+#katalog-toggle-btn {
+    width: 100%;
+    padding: 13px 16px;
+    border: 1px solid #b7e4c7;
+    border-radius: 12px;
+    background: #f0faf4;
+    color: #1b4332;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+#katalog-toggle-btn:active {
+    transform: scale(0.98);
+}
+
+#darslar-katalogi {
+    margin-top: 12px;
+    padding: 12px;
+    border-radius: 14px;
+    background: #f9fff9;
+    border: 1px solid #e8f5e9;
+}
+
+.katalog-sarlavha {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1b4332;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+}
+
+.katalog-dars-tugma {
+    width: 100%;
+    display: block;
+    text-align: left;
+    padding: 12px 13px;
+    margin-bottom: 9px;
+    border-radius: 12px;
+    border: 1px solid #d8f3dc;
+    background: #ffffff;
+    cursor: pointer;
+}
+
+.katalog-dars-tugma:last-child {
+    margin-bottom: 0;
+}
+
+.katalog-dars-tugma:hover {
+    background: #f0faf4;
+    border-color: #2d6a4f;
+}
+
+.active-katalog-dars {
+    background: #d8f3dc;
+    border-color: #1b4332;
+}
+
+.katalog-dars-raqam {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    color: #2d6a4f;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+
+.katalog-dars-nomi {
+    display: block;
+    font-size: 14px;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin-bottom: 5px;
+    line-height: 1.4;
+}
+
+.katalog-dars-meta {
+    display: block;
+    font-size: 12px;
+    color: #6b7280;
+    line-height: 1.4;
+}
