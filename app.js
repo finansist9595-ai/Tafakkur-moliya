@@ -326,6 +326,7 @@ if (katalog && !katalog.classList.contains('hidden')) {
     katalogniChiqar();
 }
 
+}
 
 // ====================================================
 // 11-QISM: DARS NAVIGATSIYASI
