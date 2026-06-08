@@ -198,23 +198,11 @@ function darsniChiqar() {
     }
 
     if (darsMatni) {
-        let yakuniyMatn = xavfsizMatn(dars.matn, 'Dars matni kiritilmagan.');
+    darsMatni.textContent = xavfsizMatn(dars.matn, 'Dars matni kiritilmagan.');
+    darsMatni.style.whiteSpace = 'pre-line';
+}
 
-        if (dars.disclaimer) {
-            yakuniyMatn +=
-                '\n\n⚠️ Eslatma:\n' +
-                xavfsizMatn(dars.disclaimer);
-        }
-
-        if (dars.review_status) {
-            yakuniyMatn +=
-                '\n\nReview status: ' +
-                xavfsizMatn(dars.review_status);
-        }
-
-        darsMatni.textContent = yakuniyMatn;
-        darsMatni.style.whiteSpace = 'pre-line';
-    }
+disclaimerKartaniChiqar(dars);
 
     if (testQismi) {
         testQismi.classList.add('hidden');
