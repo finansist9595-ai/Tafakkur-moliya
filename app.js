@@ -449,6 +449,33 @@ function testniChiqar() {
 // 10-QISM: JAVOBNI TEKSHIRISH
 // ====================================================
 
+function keyingiTestTugmasiniChiqar(dars) {
+    let eskiBtn = element('keyingi-test-btn');
+
+    if (eskiBtn) {
+        eskiBtn.remove();
+    }
+
+    const testQismi = element('test-qismi');
+
+    if (!testQismi) return;
+
+    const btn = document.createElement('button');
+    btn.id = 'keyingi-test-btn';
+    btn.className = 'keyingi-test-btn-visible';
+
+    if (joriyTestIndeksi === dars.testlar.length - 1) {
+        btn.textContent = '🏁 Darsni yakunlash';
+    } else {
+        btn.textContent = 'Keyingi savol ➡️';
+    }
+
+    btn.onclick = function () {
+        keyingiTest();
+    };
+
+    testQismi.appendChild(btn);
+}
 function javobniTekshir(tanlanganIndeks, bosilganTugma) {
     if (javobBerildi) return;
 
