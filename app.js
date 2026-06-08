@@ -303,11 +303,19 @@ function darsniChiqar() {
     const testniBoshlashBtn = element('testni-boshlash-btn');
 
     if (darsRaqam) {
-        const progressFoiz = Math.round(((joriyDarsIndeksi + 1) / darslarRoyxati.length) * 100);
+    const tugallanganSoni = tugallanganDarslarSoni();
+    const progressFoiz = Math.round((tugallanganSoni / darslarRoyxati.length) * 100);
+    const darsHolati = dars.id && darsTugallanganmi(dars.id)
+    ? '✅ Tugallangan'
+    : '⏳ Jarayonda';
 
         darsRaqam.innerHTML = `
             <span class="dars-meta-qator">
                 ${joriyDarsIndeksi + 1}-DARS
+            </span>
+
+            <span class="dars-holat">
+                ${darsHolati}
             </span>
 
             <span class="modul-nomi">
@@ -322,7 +330,9 @@ function darsniChiqar() {
                 <div class="progress-bar" style="width: ${progressFoiz}%"></div>
             </div>
 
-            <span class="progress-foiz">${progressFoiz}% yakunlandi</span>
+            <span class="progress-foiz">
+                ${progressFoiz}% yakunlandi • ${tugallanganSoni} / ${darslarRoyxati.length} dars
+            </span>
         `;
     }
 
