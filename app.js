@@ -479,37 +479,37 @@ function javobniTekshir(tanlanganIndeks, bosilganTugma) {
 
     if (natija) {
         natija.classList.remove('hidden');
-    }
-
-    if (tanlanganIndeks === togriIndeks) {
-    if (bosilganTugma) {
-        bosilganTugma.classList.add('togri-javob');
-    }
-
-    if (natija) {
-        natija.classList.add('togri-rang');
+        natija.classList.remove('togri-rang', 'notogri-rang');
     }
 
     const lessonId = dars.id || (joriyDarsIndeksi + 1);
     const testIndex = joriyTestIndeksi;
 
-    if (!ballOldinBerilganmi(lessonId, testIndex)) {
-        joriyBal += 10;
-        balniSaqla(joriyBal);
-        balBerilganDebBelgila(lessonId, testIndex);
-        balniChiqar();
-
-        if (natijaMatni) {
-            natijaMatni.textContent = '✅ To‘g‘ri! +10 ball qo‘shildi!';
+    if (tanlanganIndeks === togriIndeks) {
+        if (bosilganTugma) {
+            bosilganTugma.classList.add('togri-javob');
         }
+
+        if (natija) {
+            natija.classList.add('togri-rang');
+        }
+
+        if (!ballOldinBerilganmi(lessonId, testIndex)) {
+            joriyBal += 10;
+            balniSaqla(joriyBal);
+            ballBerilganDebBelgila(lessonId, testIndex);
+            balniChiqar();
+
+            if (natijaMatni) {
+                natijaMatni.textContent = '✅ To‘g‘ri! +10 ball qo‘shildi!';
+            }
+        } else {
+            if (natijaMatni) {
+                natijaMatni.textContent = '✅ To‘g‘ri! Bu savol uchun ball oldin berilgan.';
+            }
+        }
+
     } else {
-        if (natijaMatni) {
-            natijaMatni.textContent = '✅ To‘g‘ri! Bu savol uchun ball oldin berilgan.';
-        }
-    }
-
-} else {
-        
         if (bosilganTugma) {
             bosilganTugma.classList.add('notogri-javob');
         }
@@ -528,6 +528,7 @@ function javobniTekshir(tanlanganIndeks, bosilganTugma) {
 
     if (keyingiTestBtn) {
         keyingiTestBtn.classList.remove('hidden');
+        keyingiTestBtn.style.display = 'block';
 
         if (joriyTestIndeksi === dars.testlar.length - 1) {
             keyingiTestBtn.textContent = '🏁 Darsni yakunlash';
