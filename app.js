@@ -551,19 +551,7 @@ function javobniTekshir(tanlanganIndeks, bosilganTugma) {
         }
     }
 
-    const keyingiTestBtn = element('keyingi-test-btn');
-
-    if (keyingiTestBtn) {
-        keyingiTestBtn.classList.remove('hidden');
-        keyingiTestBtn.style.display = 'block';
-
-        if (joriyTestIndeksi === dars.testlar.length - 1) {
-            keyingiTestBtn.textContent = '🏁 Darsni yakunlash';
-        } else {
-            keyingiTestBtn.textContent = 'Keyingi savol ➡️';
-        }
-    }
-}
+    keyingiTestTugmasiniChiqar(dars);
 
 function keyingiTest() {
     const dars = joriyDarsniOl();
