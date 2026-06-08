@@ -159,6 +159,32 @@ function showTab(tabNomi) {
 // 7-QISM: DARSNI EKRANGA CHIQARISH
 // ====================================================
 
+function disclaimerKartaniChiqar(dars) {
+    const darsKartasi = element('dars-kartasi');
+
+    if (!darsKartasi) return;
+
+    let eskiKarta = element('disclaimer-karta');
+    if (eskiKarta) {
+        eskiKarta.remove();
+    }
+
+    if (!dars || !dars.disclaimer) return;
+
+    const karta = document.createElement('div');
+    karta.id = 'disclaimer-karta';
+    karta.className = 'disclaimer-karta';
+
+    karta.innerHTML = `
+        <div class="disclaimer-belgi">ℹ️</div>
+        <div class="disclaimer-matn">
+            <strong>Ta’limiy eslatma</strong>
+            <p>${xavfsizMatn(dars.disclaimer)}</p>
+        </div>
+    `;
+
+    darsKartasi.appendChild(karta);
+}
 function darsniChiqar() {
     testQisminiTikla();
 
