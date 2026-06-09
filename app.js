@@ -1036,6 +1036,44 @@ function keyingiTest() {
 }
 
 // ====================================================
+// MODUL PROGRESSINI TEKSHIRISH
+// ====================================================
+
+function modulDarslariniOl(moduleId) {
+    if (!moduleId) return [];
+
+    return darslarRoyxati.filter(function (dars) {
+        return dars && dars.module_id === moduleId;
+    });
+}
+
+function modulTugallanganmi(moduleId) {
+    const modulDarslari = modulDarslariniOl(moduleId);
+
+    if (modulDarslari.length === 0) return false;
+
+    return modulDarslari.every(function (dars) {
+        return dars.id && darsTugallanganmi(dars.id);
+    });
+}
+
+function modulTabrikHtml(dars) {
+    if (!dars || !dars.module_id) return '';
+
+    if (!modulTugallanganmi(dars.module_id)) return '';
+
+    const modulNomi = modulNominiOl(dars.module_id);
+    const modulDarslariSoni = modulDarslariniOl(dars.module_id).length;
+
+    return '' +
+        '<div class="modul-yakun-karta">' +
+            '<div class="modul-yakun-emoji">🏆</div>' +
+            '<strong>Modul yakunlandi!</strong>' +
+            '<p>' + modulNomi + ' bo‘yicha ' + modulDarslariSoni + ' ta dars muvaffaqiyatli tugallandi.</p>' +
+        '</div>';
+}
+
+// ====================================================
 // DARS ASOSIY XULOSASINI OLISH
 // ====================================================
 
