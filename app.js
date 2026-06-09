@@ -221,6 +221,24 @@ function davomEttirish() {
     }, 100);
 }
 
+function davomDarsiIndeksiniTop() {
+    if (!darsMavjudmi()) return 0;
+
+    for (let i = 0; i < darslarRoyxati.length; i++) {
+        const dars = darslarRoyxati[i];
+
+        if (!dars || !dars.id) {
+            return i;
+        }
+
+        if (!darsTugallanganmi(dars.id)) {
+            return i;
+        }
+    }
+
+    return darslarRoyxati.length - 1;
+}
+
 window.davomEttirish = davomEttirish;
 // ====================================================
 // 6-QISM: TAKRORIY BALL BERILISHINI TO‘XTATISH
