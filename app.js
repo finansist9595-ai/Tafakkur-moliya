@@ -825,6 +825,14 @@ function darsYakunlandi() {
 
     if (!testQismi) return;
 
+    const dars = joriyDarsniOl();
+
+    if (dars && dars.id) {
+        darsniTugallanganQil(dars.id);
+    }
+
+    progressKartaniYangila();
+
     const oxirgiDarsmi = joriyDarsIndeksi >= darslarRoyxati.length - 1;
 
     testQismi.innerHTML =
