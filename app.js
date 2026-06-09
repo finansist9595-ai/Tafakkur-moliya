@@ -753,18 +753,36 @@ function katalogniChiqar() {
         modulBloki.className = 'katalog-modul-bloki';
 
         const modulHeader = document.createElement('div');
-        modulHeader.className = 'katalog-modul-header';
+modulHeader.className = 'katalog-modul-header';
 
-        modulHeader.innerHTML = `
-            <span class="katalog-modul-nomi">
-                ${modulNominiOl(moduleId)}
-            </span>
-            <span class="katalog-modul-soni">
-                ${modullar[moduleId].length} ta dars
-            </span>
-        `;
+const modulJami = modullar[moduleId].length;
+const modulTugallangan = modulTugallanganDarslarSoni(moduleId);
 
-        modulBloki.appendChild(modulHeader);
+const modulFoiz = modulJami > 0
+    ? Math.round((modulTugallangan / modulJami) * 100)
+    : 0;
+
+modulHeader.innerHTML = `
+    <div class="katalog-modul-title-row">
+        <span class="katalog-modul-nomi">
+            ${modulNominiOl(moduleId)}
+        </span>
+
+        <span class="katalog-modul-soni">
+            ${modulTugallangan} / ${modulJami}
+        </span>
+    </div>
+
+    <div class="katalog-modul-progress-wrapper">
+        <div class="katalog-modul-progress-bar" style="width: ${modulFoiz}%"></div>
+    </div>
+
+    <div class="katalog-modul-progress-text">
+        ${modulFoiz}% yakunlandi
+    </div>
+`;
+
+modulBloki.appendChild(modulHeader);
 
         modullar[moduleId].forEach(function (item) {
             const dars = item.dars;
