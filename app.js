@@ -302,6 +302,7 @@ function progressKartaniYangila() {
                 xavfsizMatn(davomDarsi.mavzu, 'Dars mavzusi');
         }
     }
+    dashboardniYangila();
 }
 
 // ====================================================
