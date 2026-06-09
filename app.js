@@ -69,7 +69,7 @@ let javobBerildi = false;
 
 let joriyTestTogriSoni = 0;
 let joriyTestYangiBall = 0;
-
+let joriyTestPracticeMode = false;
 
 // ====================================================
 // 5-QISM: YORDAMCHI FUNKSIYALAR
