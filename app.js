@@ -39,17 +39,16 @@ function progressKartaniYangila() {
         }
     }
 
-    if (oxirgiDarsInfo && darslarRoyxati.length > 0) {
-        const oxirgiIndeks = oxirgiDarsIndeksiniYukla();
-        const oxirgiDars = darslarRoyxati[oxirgiIndeks];
+      if (oxirgiDarsInfo && darslarRoyxati.length > 0) {
+         const davomIndeksi = davomDarsiIndeksiniTop();
+         const davomDarsi = darslarRoyxati[davomIndeksi];
 
-        if (oxirgiDars) {
-            oxirgiDarsInfo.textContent =
-                'Oxirgi dars: ' +
-                (oxirgiIndeks + 1) +
-                '-dars — ' +
-                xavfsizMatn(oxirgiDars.mavzu, 'Dars mavzusi');
-        }
+     if (davomDarsi) {
+        oxirgiDarsInfo.textContent =
+            'Davom etish darsi: ' +
+            (davomIndeksi + 1) +
+            '-dars — ' +
+            xavfsizMatn(davomDarsi.mavzu, 'Dars mavzusi');
     }
 }
 
