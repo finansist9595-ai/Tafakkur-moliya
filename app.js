@@ -1200,7 +1200,14 @@ function darsYakunlandi() {
                     '📚 Darslar katalogiga qaytish' +
                 '</button>' +
             '</div>' +
-        '</div>';
+                '</div>';
+
+    setTimeout(function () {
+        testQismi.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+        });
+    }, 100);
 }
 
 function keyingiDarsYakundan() {
