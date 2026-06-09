@@ -101,6 +101,9 @@ let joriyDarsIndeksi = 0;
 let joriyTestIndeksi = 0;
 let javobBerildi = false;
 
+let joriyTestTogriSoni = 0;
+let joriyTestYangiBall = 0;
+
 
 // ====================================================
 // 5-QISM: YORDAMCHI FUNKSIYALAR
