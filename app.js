@@ -761,6 +761,8 @@ function javobniTekshir(tanlanganIndeks, bosilganTugma) {
     const testIndex = joriyTestIndeksi;
 
     if (tanlanganIndeks === togriIndeks) {
+        joriyTestTogriSoni++;
+        
         if (bosilganTugma) {
             bosilganTugma.classList.add('togri-javob');
         }
