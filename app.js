@@ -1305,6 +1305,7 @@ window.showTab = showTab;
 window.oldingiDars = oldingiDars;
 window.keyingiDars = keyingiDars;
 window.katalogniOchYop = katalogniOchYop;
+window.dashboardKataloggaOt = dashboardKataloggaOt;
 window.testniBoshlash = testniBoshlash;
 window.davomEttirish = davomEttirish;
 window.keyingiDarsYakundan = keyingiDarsYakundan;
