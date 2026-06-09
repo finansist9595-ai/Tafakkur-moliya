@@ -570,17 +570,20 @@ function darsniChiqar() {
         darsTugmasi.classList.remove('hidden');
     }
 
-    if (testniBoshlashBtn) {
-        const testlar = Array.isArray(dars.testlar) ? dars.testlar : [];
+   if (testniBoshlashBtn) {
+    const testlar = Array.isArray(dars.testlar) ? dars.testlar : [];
+    const practiceMode = darsPracticeModemi(dars);
 
-        if (testlar.length === 0) {
-            testniBoshlashBtn.disabled = true;
-            testniBoshlashBtn.textContent = 'Test mavjud emas';
-        } else {
-            testniBoshlashBtn.disabled = false;
-            testniBoshlashBtn.textContent = '📝 Testni Boshlash';
-        }
+    if (testlar.length === 0) {
+        testniBoshlashBtn.disabled = true;
+        testniBoshlashBtn.textContent = 'Test mavjud emas';
+    } else {
+        testniBoshlashBtn.disabled = false;
+        testniBoshlashBtn.textContent = practiceMode
+            ? '🔁 Testni qayta ishlash'
+            : '📝 Testni boshlash';
     }
+}
 
     joriyTestIndeksi = 0;
     javobBerildi = false;
