@@ -12,6 +12,7 @@ function progressKartaniYangila() {
     const progressDarslar = element('progress-darslar');
     const progressBall = element('progress-ball');
     const progressStatus = element('progress-status');
+    const oxirgiDarsInfo = element('oxirgi-dars-info');
 
     const jamiDarslar = darslarRoyxati.length;
     const tugallanganSoni = tugallanganDarslarSoni();
@@ -35,6 +36,19 @@ function progressKartaniYangila() {
             progressStatus.textContent = 'Davom etmoqda';
         } else {
             progressStatus.textContent = 'Yakunlangan';
+        }
+    }
+
+    if (oxirgiDarsInfo && darslarRoyxati.length > 0) {
+        const oxirgiIndeks = oxirgiDarsIndeksiniYukla();
+        const oxirgiDars = darslarRoyxati[oxirgiIndeks];
+
+        if (oxirgiDars) {
+            oxirgiDarsInfo.textContent =
+                'Oxirgi dars: ' +
+                (oxirgiIndeks + 1) +
+                '-dars — ' +
+                xavfsizMatn(oxirgiDars.mavzu, 'Dars mavzusi');
         }
     }
 }
