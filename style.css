@@ -936,3 +936,41 @@ body {
     font-size: 15px;
     color: #1b4332;
 }
+/* ========================================= */
+/* KATALOG MODULLARI                         */
+/* ========================================= */
+
+.katalog-modul-bloki {
+    margin-bottom: 16px;
+}
+
+.katalog-modul-bloki:last-child {
+    margin-bottom: 0;
+}
+
+.katalog-modul-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #1b4332, #2d6a4f);
+    color: #ffffff;
+}
+
+.katalog-modul-nomi {
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+.katalog-modul-soni {
+    font-size: 11px;
+    font-weight: 600;
+    background: rgba(255, 255, 255, 0.18);
+    padding: 4px 8px;
+    border-radius: 999px;
+    white-space: nowrap;
+}
