@@ -1076,14 +1076,12 @@ function modulDarslariniOl(moduleId) {
     });
 }
 
-function modulTugallanganmi(moduleId) {
+function modulTugallanganDarslarSoni(moduleId) {
     const modulDarslari = modulDarslariniOl(moduleId);
 
-    if (modulDarslari.length === 0) return false;
-
-    return modulDarslari.every(function (dars) {
-        return dars.id && darsTugallanganmi(dars.id);
-    });
+    return modulDarslari.filter(function (dars) {
+        return dars && dars.id && darsTugallanganmi(dars.id);
+    }).length;
 }
 
 function modulTabrikHtml(dars) {
