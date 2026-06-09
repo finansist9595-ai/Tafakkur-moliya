@@ -1127,6 +1127,7 @@ function darsYakunlandi() {
         : 0;
 
     const darsXulosasi = darsXulosasiniOl(dars);
+    const modulTabrik = modulTabrikHtml(dars);
     
     testQismi.innerHTML =
         '<div class="yakunlash-xabar">' +
