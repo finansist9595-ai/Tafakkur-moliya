@@ -4,6 +4,40 @@
 // Darslar va testlar bazasi lessons.js faylida saqlanadi.
 // ====================================================
 
+// ====================================================
+// PROGRESS KARTANI YANGILASH
+// ====================================================
+
+function progressKartaniYangila() {
+    const progressDarslar = element('progress-darslar');
+    const progressBall = element('progress-ball');
+    const progressStatus = element('progress-status');
+
+    const jamiDarslar = darslarRoyxati.length;
+    const tugallanganSoni = tugallanganDarslarSoni();
+
+    const foiz = jamiDarslar > 0
+        ? Math.round((tugallanganSoni / jamiDarslar) * 100)
+        : 0;
+
+    if (progressDarslar) {
+        progressDarslar.textContent = tugallanganSoni + ' / ' + jamiDarslar;
+    }
+
+    if (progressBall) {
+        progressBall.textContent = joriyBal + ' ball';
+    }
+
+    if (progressStatus) {
+        if (tugallanganSoni === 0) {
+            progressStatus.textContent = 'Boshlanmoqda';
+        } else if (foiz < 100) {
+            progressStatus.textContent = 'Davom etmoqda';
+        } else {
+            progressStatus.textContent = 'Yakunlangan';
+        }
+    }
+}
 
 // ====================================================
 // 1-QISM: TELEGRAM WEB APP ULANISHI
