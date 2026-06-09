@@ -496,42 +496,84 @@ function katalogniChiqar() {
     sarlavha.textContent = 'Darsni tanlang';
     katalog.appendChild(sarlavha);
 
+    const modullar = {};
+
     darslarRoyxati.forEach(function (dars, indeks) {
-        const tugma = document.createElement('button');
-        tugma.className = 'katalog-dars-tugma';
+        const moduleId = dars.module_id || 'module_other';
 
-        if (indeks === joriyDarsIndeksi) {
-            tugma.classList.add('active-katalog-dars');
-        }
-        const tugallangan = dars.id && darsTugallanganmi(dars.id);
-
-        if (tugallangan) {
-        tugma.classList.add('tugallangan-katalog-dars');
+        if (!modullar[moduleId]) {
+            modullar[moduleId] = [];
         }
 
-        const statusMatni = tugallangan ? '✅ Tugallangan' : '⏳ Boshlanmagan';
-        
-        tugma.innerHTML = `
-            <span class="katalog-dars-raqam">${indeks + 1}-dars</span>
-            <span class="katalog-dars-nomi">
-                ${xavfsizMatn(dars.emoji, '📘')} ${xavfsizMatn(dars.mavzu, 'Dars mavzusi')}
+        modullar[moduleId].push({
+            dars: dars,
+            indeks: indeks
+        });
+    });
+
+    Object.keys(modullar).forEach(function (moduleId) {
+        const modulBloki = document.createElement('div');
+        modulBloki.className = 'katalog-modul-bloki';
+
+        const modulHeader = document.createElement('div');
+        modulHeader.className = 'katalog-modul-header';
+
+        modulHeader.innerHTML = `
+            <span class="katalog-modul-nomi">
+                ${modulNominiOl(moduleId)}
             </span>
-            <span class="katalog-dars-meta">
-                ${modulNominiOl(dars.module_id)} • ${darajaNominiOl(dars.level)}
-            </span>
-            <span class="katalog-dars-status">
-                ${statusMatni}
+            <span class="katalog-modul-soni">
+                ${modullar[moduleId].length} ta dars
             </span>
         `;
 
-        tugma.onclick = function () {
-            darsgaOt(indeks);
-        };
+        modulBloki.appendChild(modulHeader);
 
-        katalog.appendChild(tugma);
+        modullar[moduleId].forEach(function (item) {
+            const dars = item.dars;
+            const indeks = item.indeks;
+
+            const tugma = document.createElement('button');
+            tugma.className = 'katalog-dars-tugma';
+
+            if (indeks === joriyDarsIndeksi) {
+                tugma.classList.add('active-katalog-dars');
+            }
+
+            const tugallangan = dars.id && darsTugallanganmi(dars.id);
+
+            if (tugallangan) {
+                tugma.classList.add('tugallangan-katalog-dars');
+            }
+
+            const statusMatni = tugallangan ? '✅ Tugallangan' : '⏳ Boshlanmagan';
+
+            tugma.innerHTML = `
+                <span class="katalog-dars-raqam">${indeks + 1}-dars</span>
+
+                <span class="katalog-dars-nomi">
+                    ${xavfsizMatn(dars.emoji, '📘')} ${xavfsizMatn(dars.mavzu, 'Dars mavzusi')}
+                </span>
+
+                <span class="katalog-dars-meta">
+                    ${darajaNominiOl(dars.level)}
+                </span>
+
+                <span class="katalog-dars-status">
+                    ${statusMatni}
+                </span>
+            `;
+
+            tugma.onclick = function () {
+                darsgaOt(indeks);
+            };
+
+            modulBloki.appendChild(tugma);
+        });
+
+        katalog.appendChild(modulBloki);
     });
 }
-
 function darsgaOt(indeks) {
     if (indeks < 0 || indeks >= darslarRoyxati.length) return;
 
