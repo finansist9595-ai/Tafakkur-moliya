@@ -1001,3 +1001,37 @@ body {
 .test-stat-karta strong {
     color: #1b4332;
 }
+
+/* ========================================= */
+/* DAVOM ETTIRISH TUGMASI                    */
+/* ========================================= */
+
+.progress-continue {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid #e8f5e9;
+}
+
+#davom-ettirish-btn {
+    width: 100%;
+    padding: 12px 14px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #1b4332, #2d6a4f);
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+#davom-ettirish-btn:active {
+    transform: scale(0.98);
+}
+
+#oxirgi-dars-info {
+    display: block;
+    margin-top: 8px;
+    font-size: 12px;
+    color: #6b7280;
+    line-height: 1.4;
+}
