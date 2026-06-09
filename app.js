@@ -625,6 +625,28 @@ function keyingiDars() {
 // 15-QISM: DARS KATALOGI
 // ====================================================
 
+function dashboardKataloggaOt() {
+    showTab('talim');
+
+    const katalog = element('darslar-katalogi');
+
+    if (katalog) {
+        katalogniChiqar();
+        katalog.classList.remove('hidden');
+    }
+
+    setTimeout(function () {
+        const katalogBloki = element('katalog-bloki') || element('darslar-katalogi');
+
+        if (katalogBloki) {
+            katalogBloki.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+    }, 120);
+}
+
 function katalogniOchYop() {
     const katalog = element('darslar-katalogi');
 
