@@ -395,8 +395,10 @@ function darsniChiqar() {
         return;
     }
 
-    const dars = joriyDarsniOl();
-    if (!dars) return;
+   const dars = joriyDarsniOl();
+if (!dars) return;
+
+oxirgiDarsniSaqla(joriyDarsIndeksi);
 
     const darsRaqam = element('dars-raqam');
     const darsSarlavha = element('dars-sarlavha');
