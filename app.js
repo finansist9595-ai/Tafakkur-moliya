@@ -570,44 +570,35 @@ function darsniChiqar() {
         darsTugmasi.classList.remove('hidden');
     }
 
-   function testniBoshlash() {
-    const dars = joriyDarsniOl();
+    if (testniBoshlashBtn) {
+        const testlar = Array.isArray(dars.testlar) ? dars.testlar : [];
+        const practiceMode = darsPracticeModemi(dars);
 
-    if (!dars || !Array.isArray(dars.testlar) || dars.testlar.length === 0) {
-        alert('Bu dars uchun test savollari hali kiritilmagan.');
-        return;
+        if (testlar.length === 0) {
+            testniBoshlashBtn.disabled = true;
+            testniBoshlashBtn.textContent = 'Test mavjud emas';
+        } else {
+            testniBoshlashBtn.disabled = false;
+            testniBoshlashBtn.textContent = practiceMode
+                ? '🔁 Testni qayta ishlash'
+                : '📝 Testni boshlash';
+        }
     }
-
-    testQisminiTikla();
 
     joriyTestIndeksi = 0;
     javobBerildi = false;
     joriyTestTogriSoni = 0;
     joriyTestYangiBall = 0;
-    joriyTestPracticeMode = darsPracticeModemi(dars);
+    joriyTestPracticeMode = false;
 
-    const darsTugmasi = element('dars-tugmasi');
-    const testQismi = element('test-qismi');
+    yangilaNavigatsiya();
+    balniChiqar();
 
-    if (darsTugmasi) {
-        darsTugmasi.classList.add('hidden');
+    const katalog = element('darslar-katalogi');
+
+    if (katalog && !katalog.classList.contains('hidden')) {
+        katalogniChiqar();
     }
-
-    if (testQismi) {
-        testQismi.classList.remove('hidden');
-
-        if (joriyTestPracticeMode) {
-            const practiceInfo = document.createElement('div');
-            practiceInfo.className = 'practice-mode-karta';
-            practiceInfo.innerHTML =
-                '<strong>Practice mode</strong>' +
-                '<p>Bu dars oldin tugallangan. Qayta ishlash bilimni mustahkamlash uchun, ball qo‘shilmaydi.</p>';
-
-            testQismi.prepend(practiceInfo);
-        }
-    }
-
-    testniChiqar();
 }
 
 // ====================================================
