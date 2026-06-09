@@ -1128,20 +1128,21 @@ function darsYakunlandi() {
 
     const darsXulosasi = darsXulosasiniOl(dars);
     const modulTabrik = modulTabrikHtml(dars);
-    
+
     testQismi.innerHTML =
         '<div class="yakunlash-xabar">' +
             '<div class="yakunlash-emoji">🎉</div>' +
             '<h3>Dars yakunlandi!</h3>' +
-            ''<p>Siz bu darsni muvaffaqiyatli yakunladingiz.</p>' +
+            '<p>Siz bu darsni muvaffaqiyatli yakunladingiz.</p>' +
 
-        '<div class="dars-xulosa-karta">' +
-    '      <span>Asosiy xulosa</span>' +
-    '         <p>' + darsXulosasi + '</p>' +
-        '</div>' +
+            modulTabrik +
 
-        '<div class="test-stat-karta">' +
-    
+            '<div class="dars-xulosa-karta">' +
+                '<span>Asosiy xulosa</span>' +
+                '<p>' + darsXulosasi + '</p>' +
+            '</div>' +
+
+            '<div class="test-stat-karta">' +
                 '<p><strong>Natija:</strong> ' + joriyTestTogriSoni + ' / ' + jamiSavollar + ' ta to‘g‘ri</p>' +
                 '<p><strong>Foiz:</strong> ' + natijaFoizi + '%</p>' +
                 '<p><strong>Bu urinishda olingan ball:</strong> +' + joriyTestYangiBall + '</p>' +
