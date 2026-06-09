@@ -1120,6 +1120,8 @@ function ilovaniIshgaTushir() {
         ismElement.textContent = foydalanuvchiIsmi;
     }
 
+    joriyDarsIndeksi = oxirgiDarsIndeksiniYukla();
+
     balniChiqar();
     darsniChiqar();
     showTab('talim');
