@@ -1558,3 +1558,29 @@ body {
     line-height: 1.6;
     color: #1f2937;
 }
+/* ========================================= */
+/* 124-AMAL: PRACTICE MODE                   */
+/* ========================================= */
+
+.practice-mode-karta {
+    margin-bottom: 14px;
+    padding: 13px 14px;
+    border-radius: 15px;
+    background: linear-gradient(135deg, #eff6ff, #ffffff);
+    border: 1px solid #bfdbfe;
+    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.08);
+}
+
+.practice-mode-karta strong {
+    display: block;
+    font-size: 13px;
+    color: #1d4ed8;
+    margin-bottom: 5px;
+}
+
+.practice-mode-karta p {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.5;
+    color: #334155;
+}
