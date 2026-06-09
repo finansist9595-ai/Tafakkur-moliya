@@ -219,13 +219,25 @@ function testQisminiTikla() {
 
     if (!testQismi) return;
 
-    const dars = joriyDarsniOl();
+    function testQisminiTikla() {
+    const testQismi = element('test-qismi');
 
-   if (dars && dars.id) {
-    darsniTugallanganQil(dars.id);
-   }
+    if (!testQismi) return;
 
-    progressKartaniYangila();
+    testQismi.innerHTML = `
+        <p id="test-raqam">Test 1 / 3</p>
+
+        <div class="card">
+            <p id="test-savol">Savol yuklanmoqda...</p>
+        </div>
+
+        <div id="test-javoblar"></div>
+
+        <div id="test-natija" class="hidden">
+            <p id="test-natija-matni"></p>
+        </div>
+    `;
+}
     
     testQismi.innerHTML = `
         <p id="test-raqam">Test 1 / 3</p>
