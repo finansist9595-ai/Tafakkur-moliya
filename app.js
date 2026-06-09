@@ -946,26 +946,40 @@ function keyingiTestTugmasiniChiqar(dars) {
 
     const testQismi = element('test-qismi');
 
-    if (!testQismi) return;
+    if (!testQismi || !dars || !Array.isArray(dars.testlar)) return;
 
     const btn = document.createElement('button');
     btn.id = 'keyingi-test-btn';
+    btn.type = 'button';
     btn.className = 'keyingi-test-btn-visible';
 
-    if (joriyTestIndeksi === dars.testlar.length - 1) {
+    const oxirgiSavolmi = joriyTestIndeksi >= dars.testlar.length - 1;
+
+    if (oxirgiSavolmi) {
         btn.textContent = '🏁 Darsni yakunlash';
     } else {
         btn.textContent = 'Keyingi savol ➡️';
     }
 
-    btn.onclick = function () {
-        keyingiTest();
-    };
+    btn.addEventListener('click', function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        if (btn.dataset.clicked === 'yes') return;
+
+        btn.dataset.clicked = 'yes';
+        btn.disabled = true;
+
+        if (oxirgiSavolmi) {
+            darsYakunlandi();
+        } else {
+            joriyTestIndeksi++;
+            testniChiqar();
+        }
+    });
 
     testQismi.appendChild(btn);
 }
-
-
 // ====================================================
 // 18-QISM: JAVOBNI TEKSHIRISH
 // ====================================================
