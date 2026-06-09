@@ -304,6 +304,63 @@ function progressKartaniYangila() {
     }
 }
 
+// ====================================================
+// DASHBOARDNI YANGILASH
+// ====================================================
+
+function jamiTestlarSoni() {
+    let jami = 0;
+
+    darslarRoyxati.forEach(function (dars) {
+        if (dars && Array.isArray(dars.testlar)) {
+            jami += dars.testlar.length;
+        }
+    });
+
+    return jami;
+}
+
+function dashboardniYangila() {
+    const dashboardDarslar = element('dashboard-darslar');
+    const dashboardTestlar = element('dashboard-testlar');
+    const dashboardProgress = element('dashboard-progress');
+    const dashboardBall = element('dashboard-ball');
+    const dashboardStatus = element('dashboard-status');
+
+    const jamiDarslar = darslarRoyxati.length;
+    const tugallanganSoni = tugallanganDarslarSoni();
+
+    const progressFoiz = jamiDarslar > 0
+        ? Math.round((tugallanganSoni / jamiDarslar) * 100)
+        : 0;
+
+    if (dashboardDarslar) {
+        dashboardDarslar.textContent = jamiDarslar + ' ta';
+    }
+
+    if (dashboardTestlar) {
+        dashboardTestlar.textContent = jamiTestlarSoni() + ' ta';
+    }
+
+    if (dashboardProgress) {
+        dashboardProgress.textContent = progressFoiz + '%';
+    }
+
+    if (dashboardBall) {
+        dashboardBall.textContent = joriyBal + ' ball';
+    }
+
+    if (dashboardStatus) {
+        if (tugallanganSoni === 0) {
+            dashboardStatus.textContent = 'Kurs hali boshlanmagan';
+        } else if (progressFoiz < 100) {
+            dashboardStatus.textContent =
+                tugallanganSoni + ' / ' + jamiDarslar + ' ta dars tugallangan';
+        } else {
+            dashboardStatus.textContent = 'Tabriklaymiz! Kurs to‘liq yakunlangan';
+        }
+    }
+}
 
 // ====================================================
 // 10-QISM: TEST QISMINI TIKLASH
