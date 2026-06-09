@@ -190,9 +190,9 @@ function oxirgiDarsIndeksiniYukla() {
 }
 
 function davomEttirish() {
-    const oxirgiIndeks = oxirgiDarsIndeksiniYukla();
+    const davomIndeksi = davomDarsiIndeksiniTop();
 
-    joriyDarsIndeksi = oxirgiIndeks;
+    joriyDarsIndeksi = davomIndeksi;
 
     showTab('talim');
 
@@ -220,6 +220,8 @@ function davomEttirish() {
         }
     }, 100);
 }
+
+window.davomEttirish = davomEttirish;
 
 function davomDarsiIndeksiniTop() {
     if (!darsMavjudmi()) return 0;
