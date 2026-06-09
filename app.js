@@ -1088,6 +1088,8 @@ function darsYakunlandi() {
         ? Math.round((joriyTestTogriSoni / jamiSavollar) * 100)
         : 0;
 
+    const darsXulosasi = darsXulosasiniOl(dars);
+    
     testQismi.innerHTML =
         '<div class="yakunlash-xabar">' +
             '<div class="yakunlash-emoji">🎉</div>' +
