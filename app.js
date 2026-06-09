@@ -1080,12 +1080,13 @@ function keyingiTest() {
 
     if (!dars || !Array.isArray(dars.testlar)) return;
 
-    if (joriyTestIndeksi < dars.testlar.length - 1) {
-        joriyTestIndeksi++;
-        testniChiqar();
-    } else {
+    if (joriyTestIndeksi >= dars.testlar.length - 1) {
         darsYakunlandi();
+        return;
     }
+
+    joriyTestIndeksi++;
+    testniChiqar();
 }
 
 // ====================================================
