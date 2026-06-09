@@ -933,7 +933,7 @@ function darsYakunlandi() {
     progressKartaniYangila();
 
     const oxirgiDarsmi = joriyDarsIndeksi >= darslarRoyxati.length - 1;
-    
+
     const jamiSavollar = dars && Array.isArray(dars.testlar)
         ? dars.testlar.length
         : 0;
@@ -941,7 +941,7 @@ function darsYakunlandi() {
     const natijaFoizi = jamiSavollar > 0
         ? Math.round((joriyTestTogriSoni / jamiSavollar) * 100)
         : 0;
-    
+
     testQismi.innerHTML =
         '<div class="yakunlash-xabar">' +
             '<div class="yakunlash-emoji">🎉</div>' +
@@ -949,18 +949,29 @@ function darsYakunlandi() {
             '<p>Siz bu darsni muvaffaqiyatli yakunladingiz.</p>' +
 
             '<div class="test-stat-karta">' +
-            '<p><strong>Natija:</strong> ' + joriyTestTogriSoni + ' / ' + jamiSavollar + ' ta to‘g‘ri</p>' +
-            '<p><strong>Foiz:</strong> ' + natijaFoizi + '%</p>' +
-            '<p><strong>Bu urinishda olingan ball:</strong> +' + joriyTestYangiBall + '</p>' +
+                '<p><strong>Natija:</strong> ' + joriyTestTogriSoni + ' / ' + jamiSavollar + ' ta to‘g‘ri</p>' +
+                '<p><strong>Foiz:</strong> ' + natijaFoizi + '%</p>' +
+                '<p><strong>Bu urinishda olingan ball:</strong> +' + joriyTestYangiBall + '</p>' +
             '</div>' +
 
-'<p class="joriy-bal-yak">Umumiy balingiz: <strong>' + joriyBal + ' ball</strong></p>' +
-            '<button class="keyingi-dars-yak-btn" onclick="keyingiDarsYakundan()">' +
-                (oxirgiDarsmi ? '🏆 Reytingni ko‘rish' : '➡️ Keyingi darsga o‘tish') +
-            '</button>' +
+            '<p class="joriy-bal-yak">Umumiy balingiz: <strong>' + joriyBal + ' ball</strong></p>' +
+
+            '<div class="yakunlash-actions">' +
+                '<button class="keyingi-dars-yak-btn" onclick="keyingiDarsYakundan()">' +
+                    (oxirgiDarsmi ? '🏆 Reytingni ko‘rish' : '➡️ Keyingi darsga o‘tish') +
+                '</button>' +
+
+                '<button class="qayta-korish-yak-btn" onclick="darsniQaytaKorish()">' +
+                    '🔁 Darsni qayta ko‘rish' +
+                '</button>' +
+
+                '<button class="katalog-yak-btn" onclick="kataloggaQaytishYakundan()">' +
+                    '📚 Darslar katalogiga qaytish' +
+                '</button>' +
+            '</div>' +
         '</div>';
 }
-
+    
 function keyingiDarsYakundan() {
     if (joriyDarsIndeksi < darslarRoyxati.length - 1) {
         joriyDarsIndeksi++;
@@ -970,6 +981,28 @@ function keyingiDarsYakundan() {
     }
 }
 
+    function darsniQaytaKorish() {
+    darsniChiqar();
+
+    const testQismi = element('test-qismi');
+
+    if (testQismi) {
+        testQismi.classList.add('hidden');
+    }
+
+    const darsTugmasi = element('dars-tugmasi');
+
+    if (darsTugmasi) {
+        darsTugmasi.classList.remove('hidden');
+    }
+
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+}
+
+window.darsniQaytaKorish = darsniQaytaKorish;
 
 // ====================================================
 // 17-QISM: BALLARNI KO‘RSATISH
