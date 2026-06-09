@@ -190,15 +190,38 @@ function oxirgiDarsIndeksiniYukla() {
 }
 
 function davomEttirish() {
-    joriyDarsIndeksi = oxirgiDarsIndeksiniYukla();
+    const oxirgiIndeks = oxirgiDarsIndeksiniYukla();
+
+    joriyDarsIndeksi = oxirgiIndeks;
+
+    showTab('talim');
+
+    const katalog = element('darslar-katalogi');
+
+    if (katalog) {
+        katalog.classList.add('hidden');
+    }
+
     darsniChiqar();
 
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-    });
+    setTimeout(function () {
+        const darsKartasi = element('dars-kartasi') || element('tab-talim');
+
+        if (darsKartasi) {
+            darsKartasi.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        } else {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+    }, 100);
 }
 
+window.davomEttirish = davomEttirish;
 // ====================================================
 // 6-QISM: TAKRORIY BALL BERILISHINI TO‘XTATISH
 // ====================================================
