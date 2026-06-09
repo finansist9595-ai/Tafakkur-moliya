@@ -843,7 +843,15 @@ function darsYakunlandi() {
     progressKartaniYangila();
 
     const oxirgiDarsmi = joriyDarsIndeksi >= darslarRoyxati.length - 1;
+    
+    const jamiSavollar = dars && Array.isArray(dars.testlar)
+        ? dars.testlar.length
+        : 0;
 
+    const natijaFoizi = jamiSavollar > 0
+        ? Math.round((joriyTestTogriSoni / jamiSavollar) * 100)
+        : 0;
+    
     testQismi.innerHTML =
         '<div class="yakunlash-xabar">' +
             '<div class="yakunlash-emoji">🎉</div>' +
