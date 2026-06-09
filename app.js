@@ -427,6 +427,8 @@ function darsniChiqar() {
 
     joriyTestIndeksi = 0;
     javobBerildi = false;
+    joriyTestTogriSoni = 0;
+    joriyTestYangiBall = 0;
 
    yangilaNavigatsiya();
 balniChiqar();
