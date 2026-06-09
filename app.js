@@ -666,6 +666,33 @@ function dashboardKataloggaOt() {
     }, 120);
 }
 
+function tavsiyaDarsniOch() {
+    const tavsiyaIndeksi = davomDarsiIndeksiniTop();
+
+    joriyDarsIndeksi = tavsiyaIndeksi;
+
+    showTab('talim');
+
+    const katalog = element('darslar-katalogi');
+
+    if (katalog) {
+        katalog.classList.add('hidden');
+    }
+
+    darsniChiqar();
+
+    setTimeout(function () {
+        const darsKartasi = element('dars-kartasi') || element('tab-talim');
+
+        if (darsKartasi) {
+            darsKartasi.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+    }, 120);
+}
+
 function katalogniOchYop() {
     const katalog = element('darslar-katalogi');
 
