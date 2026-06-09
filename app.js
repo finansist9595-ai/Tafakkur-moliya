@@ -773,6 +773,8 @@ function javobniTekshir(tanlanganIndeks, bosilganTugma) {
 
         if (!ballOldinBerilganmi(lessonId, testIndex)) {
             joriyBal += 10;
+            joriyTestYangiBall += 10;
+
             balniSaqla(joriyBal);
             ballBerilganDebBelgila(lessonId, testIndex);
             balniChiqar();
