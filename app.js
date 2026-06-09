@@ -1035,6 +1035,31 @@ function keyingiTest() {
     }
 }
 
+// ====================================================
+// DARS ASOSIY XULOSASINI OLISH
+// ====================================================
+
+function darsXulosasiniOl(dars) {
+    if (!dars) {
+        return 'Ushbu dars orqali mavzuning asosiy mazmuni qisqacha mustahkamlandi.';
+    }
+
+    if (dars.xulosa) {
+        return xavfsizMatn(dars.xulosa);
+    }
+
+    if (dars.matn) {
+        const matn = xavfsizMatn(dars.matn);
+        const gaplar = matn.split('.');
+
+        if (gaplar.length > 0 && gaplar[0].trim().length > 20) {
+            return gaplar[0].trim() + '.';
+        }
+    }
+
+    return xavfsizMatn(dars.mavzu, 'Dars') +
+        ' mavzusi bo‘yicha asosiy tushunchalar mustahkamlandi.';
+}
 
 // ====================================================
 // 20-QISM: DARS YAKUNLASH
