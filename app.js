@@ -364,8 +364,24 @@ function dashboardniYangila() {
             dashboardStatus.textContent = 'Tabriklaymiz! Kurs to‘liq yakunlangan';
         }
     }
-}
 
+     if (dashboardRecommendTitle && dashboardRecommendMeta && darslarRoyxati.length > 0) {
+    const tavsiyaIndeksi = davomDarsiIndeksiniTop();
+    const tavsiyaDars = darslarRoyxati[tavsiyaIndeksi];
+
+    if (tavsiyaDars) {
+        dashboardRecommendTitle.textContent =
+            (tavsiyaIndeksi + 1) +
+            '-dars — ' +
+            xavfsizMatn(tavsiyaDars.mavzu, 'Dars mavzusi');
+
+        dashboardRecommendMeta.textContent =
+            modulNominiOl(tavsiyaDars.module_id) +
+            ' • ' +
+            darajaNominiOl(tavsiyaDars.level);
+    }
+ }
+}
 // ====================================================
 // 10-QISM: TEST QISMINI TIKLASH
 // ====================================================
