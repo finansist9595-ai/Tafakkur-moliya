@@ -601,6 +601,7 @@ function darsniChiqar() {
     }
 }
 
+
 // ====================================================
 // 14-QISM: DARS NAVIGATSIYASI
 // ====================================================
@@ -744,42 +745,43 @@ function katalogniChiqar() {
         modulBloki.className = 'katalog-modul-bloki';
 
         const modulHeader = document.createElement('div');
-modulHeader.className = 'katalog-modul-header';
+        modulHeader.className = 'katalog-modul-header';
 
-const modulJami = modullar[moduleId].length;
-const modulTugallangan = modulTugallanganDarslarSoni(moduleId);
+        const modulJami = modullar[moduleId].length;
+        const modulTugallangan = modulTugallanganDarslarSoni(moduleId);
 
-const modulFoiz = modulJami > 0
-    ? Math.round((modulTugallangan / modulJami) * 100)
-    : 0;
+        const modulFoiz = modulJami > 0
+            ? Math.round((modulTugallangan / modulJami) * 100)
+            : 0;
 
-modulHeader.innerHTML = `
-    <div class="katalog-modul-title-row">
-        <span class="katalog-modul-nomi">
-            ${modulNominiOl(moduleId)}
-        </span>
+        modulHeader.innerHTML = `
+            <div class="katalog-modul-title-row">
+                <span class="katalog-modul-nomi">
+                    ${modulNominiOl(moduleId)}
+                </span>
 
-        <span class="katalog-modul-soni">
-            ${modulTugallangan} / ${modulJami}
-        </span>
-    </div>
+                <span class="katalog-modul-soni">
+                    ${modulTugallangan} / ${modulJami}
+                </span>
+            </div>
 
-    <div class="katalog-modul-progress-wrapper">
-        <div class="katalog-modul-progress-bar" style="width: ${modulFoiz}%"></div>
-    </div>
+            <div class="katalog-modul-progress-wrapper">
+                <div class="katalog-modul-progress-bar" style="width: ${modulFoiz}%"></div>
+            </div>
 
-    <div class="katalog-modul-progress-text">
-        ${modulFoiz}% yakunlandi
-    </div>
-`;
+            <div class="katalog-modul-progress-text">
+                ${modulFoiz}% yakunlandi
+            </div>
+        `;
 
-modulBloki.appendChild(modulHeader);
+        modulBloki.appendChild(modulHeader);
 
         modullar[moduleId].forEach(function (item) {
             const dars = item.dars;
             const indeks = item.indeks;
 
             const tugma = document.createElement('button');
+            tugma.type = 'button';
             tugma.className = 'katalog-dars-tugma';
 
             if (indeks === joriyDarsIndeksi) {
@@ -810,9 +812,9 @@ modulBloki.appendChild(modulHeader);
                 </span>
             `;
 
-            tugma.onclick = function () {
+            tugma.addEventListener('click', function () {
                 darsgaOt(indeks);
-            };
+            });
 
             modulBloki.appendChild(tugma);
         });
@@ -883,6 +885,7 @@ function testniBoshlash() {
 
     testniChiqar();
 }
+
 function testniChiqar() {
     const dars = joriyDarsniOl();
 
@@ -893,6 +896,11 @@ function testniChiqar() {
     if (!test) return;
 
     javobBerildi = false;
+
+    const eskiBtn = element('keyingi-test-btn');
+    if (eskiBtn) {
+        eskiBtn.remove();
+    }
 
     const testRaqam = element('test-raqam');
     const testSavol = element('test-savol');
@@ -921,6 +929,7 @@ function testniChiqar() {
 
     javoblar.forEach(function (javobMatni, indeks) {
         const tugma = document.createElement('button');
+        tugma.type = 'button';
         tugma.className = 'javob-tugma';
         tugma.textContent = (indeks + 1) + '. ' + javobMatni;
 
@@ -955,11 +964,9 @@ function keyingiTestTugmasiniChiqar(dars) {
 
     const oxirgiSavolmi = joriyTestIndeksi >= dars.testlar.length - 1;
 
-    if (oxirgiSavolmi) {
-        btn.textContent = '🏁 Darsni yakunlash';
-    } else {
-        btn.textContent = 'Keyingi savol ➡️';
-    }
+    btn.textContent = oxirgiSavolmi
+        ? '🏁 Darsni yakunlash'
+        : 'Keyingi savol ➡️';
 
     btn.addEventListener('click', function (event) {
         event.preventDefault();
@@ -973,13 +980,14 @@ function keyingiTestTugmasiniChiqar(dars) {
         if (oxirgiSavolmi) {
             darsYakunlandi();
         } else {
-            joriyTestIndeksi++;
-            testniChiqar();
+            keyingiTest();
         }
     });
 
     testQismi.appendChild(btn);
 }
+
+
 // ====================================================
 // 18-QISM: JAVOBNI TEKSHIRISH
 // ====================================================
@@ -1071,6 +1079,7 @@ function javobniTekshir(tanlanganIndeks, bosilganTugma) {
     keyingiTestTugmasiniChiqar(dars);
 }
 
+
 // ====================================================
 // 19-QISM: KEYINGI TEST
 // ====================================================
@@ -1088,6 +1097,7 @@ function keyingiTest() {
     joriyTestIndeksi++;
     testniChiqar();
 }
+
 
 // ====================================================
 // MODUL PROGRESSINI TEKSHIRISH
@@ -1109,6 +1119,16 @@ function modulTugallanganDarslarSoni(moduleId) {
     }).length;
 }
 
+function modulTugallanganmi(moduleId) {
+    const modulDarslari = modulDarslariniOl(moduleId);
+
+    if (modulDarslari.length === 0) return false;
+
+    return modulDarslari.every(function (dars) {
+        return dars.id && darsTugallanganmi(dars.id);
+    });
+}
+
 function modulTabrikHtml(dars) {
     if (!dars || !dars.module_id) return '';
 
@@ -1124,6 +1144,7 @@ function modulTabrikHtml(dars) {
             '<p>' + modulNomi + ' bo‘yicha ' + modulDarslariSoni + ' ta dars muvaffaqiyatli tugallandi.</p>' +
         '</div>';
 }
+
 
 // ====================================================
 // DARS ASOSIY XULOSASINI OLISH
@@ -1150,6 +1171,7 @@ function darsXulosasiniOl(dars) {
     return xavfsizMatn(dars.mavzu, 'Dars') +
         ' mavzusi bo‘yicha asosiy tushunchalar mustahkamlandi.';
 }
+
 
 // ====================================================
 // 20-QISM: DARS YAKUNLASH
@@ -1181,6 +1203,8 @@ function darsYakunlandi() {
     const darsXulosasi = darsXulosasiniOl(dars);
     const modulTabrik = modulTabrikHtml(dars);
 
+    testQismi.classList.remove('hidden');
+
     testQismi.innerHTML =
         '<div class="yakunlash-xabar">' +
             '<div class="yakunlash-emoji">🎉</div>' +
@@ -1203,19 +1227,19 @@ function darsYakunlandi() {
             '<p class="joriy-bal-yak">Umumiy balingiz: <strong>' + joriyBal + ' ball</strong></p>' +
 
             '<div class="yakunlash-actions">' +
-                '<button class="keyingi-dars-yak-btn" onclick="keyingiDarsYakundan()">' +
+                '<button type="button" class="keyingi-dars-yak-btn" onclick="keyingiDarsYakundan()">' +
                     (oxirgiDarsmi ? '🏆 Reytingni ko‘rish' : '➡️ Keyingi darsga o‘tish') +
                 '</button>' +
 
-                '<button class="qayta-korish-yak-btn" onclick="darsniQaytaKorish()">' +
+                '<button type="button" class="qayta-korish-yak-btn" onclick="darsniQaytaKorish()">' +
                     '🔁 Darsni qayta ko‘rish' +
                 '</button>' +
 
-                '<button class="katalog-yak-btn" onclick="kataloggaQaytishYakundan()">' +
+                '<button type="button" class="katalog-yak-btn" onclick="kataloggaQaytishYakundan()">' +
                     '📚 Darslar katalogiga qaytish' +
                 '</button>' +
             '</div>' +
-                '</div>';
+        '</div>';
 
     setTimeout(function () {
         testQismi.scrollIntoView({
@@ -1229,6 +1253,11 @@ function keyingiDarsYakundan() {
     if (joriyDarsIndeksi < darslarRoyxati.length - 1) {
         joriyDarsIndeksi++;
         darsniChiqar();
+
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
     } else {
         showTab('reyting');
     }
@@ -1467,7 +1496,7 @@ function ilovaniIshgaTushir() {
         ismElement.textContent = foydalanuvchiIsmi;
     }
 
-    joriyDarsIndeksi = oxirgiDarsIndeksiniYukla();
+    joriyDarsIndeksi = davomDarsiIndeksiniTop();
 
     balniChiqar();
     darsniChiqar();
@@ -1484,10 +1513,7 @@ window.oldingiDars = oldingiDars;
 window.keyingiDars = keyingiDars;
 window.katalogniOchYop = katalogniOchYop;
 window.dashboardKataloggaOt = dashboardKataloggaOt;
-window.katalogniOchYop = katalogniOchYop;
-window.dashboardKataloggaOt = dashboardKataloggaOt;
 window.tavsiyaDarsniOch = tavsiyaDarsniOch;
-window.testniBoshlash = testniBoshlash;
 window.testniBoshlash = testniBoshlash;
 window.davomEttirish = davomEttirish;
 window.keyingiDarsYakundan = keyingiDarsYakundan;
