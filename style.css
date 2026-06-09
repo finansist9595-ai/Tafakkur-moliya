@@ -1321,3 +1321,155 @@ body {
         font-size: 18px;
     }
 }
+/* ========================================= */
+/* 119-AMAL: BOSH SAHIFA / DASHBOARD         */
+/* ========================================= */
+
+.dashboard-karta {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #0f172a, #1b4332);
+    color: #ffffff;
+    border: none;
+    box-shadow: 0 14px 34px rgba(15, 23, 42, 0.22);
+}
+
+.dashboard-karta::before {
+    content: "";
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 150px;
+    height: 150px;
+    background: rgba(34, 197, 94, 0.18);
+    border-radius: 999px;
+}
+
+.dashboard-karta::after {
+    content: "";
+    position: absolute;
+    bottom: -60px;
+    left: -50px;
+    width: 160px;
+    height: 160px;
+    background: rgba(245, 158, 11, 0.14);
+    border-radius: 999px;
+}
+
+.dashboard-hero,
+.dashboard-grid,
+.dashboard-status-box,
+.dashboard-actions {
+    position: relative;
+    z-index: 1;
+}
+
+.dashboard-label {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    color: #facc15;
+    margin-bottom: 8px;
+}
+
+.dashboard-hero h2 {
+    margin: 0 0 8px;
+    font-size: 21px;
+    line-height: 1.3;
+}
+
+.dashboard-hero p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.82);
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.dashboard-stat {
+    background: rgba(255, 255, 255, 0.10);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 15px;
+    padding: 12px;
+    backdrop-filter: blur(10px);
+}
+
+.dashboard-stat span {
+    display: block;
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.76);
+    margin-bottom: 6px;
+}
+
+.dashboard-stat strong {
+    display: block;
+    font-size: 16px;
+    color: #ffffff;
+}
+
+.dashboard-status-box {
+    margin-top: 14px;
+    padding: 11px 12px;
+    border-radius: 14px;
+    background: rgba(250, 204, 21, 0.14);
+    border: 1px solid rgba(250, 204, 21, 0.22);
+}
+
+.dashboard-status-box span {
+    font-size: 13px;
+    font-weight: 700;
+    color: #fde68a;
+}
+
+.dashboard-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+.dashboard-primary-btn,
+.dashboard-secondary-btn {
+    width: 100%;
+    min-height: 46px;
+    border-radius: 14px;
+    font-size: 14px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: transform 0.12s ease, opacity 0.12s ease;
+}
+
+.dashboard-primary-btn {
+    color: #1b4332;
+    background: linear-gradient(135deg, #facc15, #fde68a);
+    border: none;
+    box-shadow: 0 8px 18px rgba(250, 204, 21, 0.22);
+}
+
+.dashboard-secondary-btn {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.10);
+    border: 1px solid rgba(255, 255, 255, 0.20);
+}
+
+.dashboard-primary-btn:active,
+.dashboard-secondary-btn:active {
+    transform: scale(0.98);
+}
+
+@media (max-width: 420px) {
+    .dashboard-hero h2 {
+        font-size: 19px;
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
