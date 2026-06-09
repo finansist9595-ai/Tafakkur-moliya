@@ -857,7 +857,14 @@ function darsYakunlandi() {
             '<div class="yakunlash-emoji">🎉</div>' +
             '<h3>Dars yakunlandi!</h3>' +
             '<p>Siz bu darsni muvaffaqiyatli yakunladingiz.</p>' +
-            '<p class="joriy-bal-yak">Umumiy balingiz: <strong>' + joriyBal + ' ball</strong></p>' +
+
+            '<div class="test-stat-karta">' +
+            '<p><strong>Natija:</strong> ' + joriyTestTogriSoni + ' / ' + jamiSavollar + ' ta to‘g‘ri</p>' +
+            '<p><strong>Foiz:</strong> ' + natijaFoizi + '%</p>' +
+            '<p><strong>Bu urinishda olingan ball:</strong> +' + joriyTestYangiBall + '</p>' +
+            '</div>' +
+
+'<p class="joriy-bal-yak">Umumiy balingiz: <strong>' + joriyBal + ' ball</strong></p>' +
             '<button class="keyingi-dars-yak-btn" onclick="keyingiDarsYakundan()">' +
                 (oxirgiDarsmi ? '🏆 Reytingni ko‘rish' : '➡️ Keyingi darsga o‘tish') +
             '</button>' +
