@@ -327,7 +327,10 @@ function dashboardniYangila() {
     const dashboardProgress = element('dashboard-progress');
     const dashboardBall = element('dashboard-ball');
     const dashboardStatus = element('dashboard-status');
-
+    
+    const dashboardRecommendTitle = element('dashboard-recommend-title');
+    const dashboardRecommendMeta = element('dashboard-recommend-meta');
+    
     const jamiDarslar = darslarRoyxati.length;
     const tugallanganSoni = tugallanganDarslarSoni();
 
