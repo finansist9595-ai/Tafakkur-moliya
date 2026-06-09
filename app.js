@@ -867,6 +867,8 @@ function balniChiqar() {
     if (balElement) {
         balElement.textContent = joriyBal;
     }
+
+    progressKartaniYangila();
 }
 
 
