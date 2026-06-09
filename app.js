@@ -858,6 +858,7 @@ function testniBoshlash() {
     javobBerildi = false;
     joriyTestTogriSoni = 0;
     joriyTestYangiBall = 0;
+    joriyTestPracticeMode = darsPracticeModemi(dars);
 
     const darsTugmasi = element('dars-tugmasi');
     const testQismi = element('test-qismi');
@@ -868,11 +869,20 @@ function testniBoshlash() {
 
     if (testQismi) {
         testQismi.classList.remove('hidden');
+
+        if (joriyTestPracticeMode) {
+            const practiceInfo = document.createElement('div');
+            practiceInfo.className = 'practice-mode-karta';
+            practiceInfo.innerHTML =
+                '<strong>Practice mode</strong>' +
+                '<p>Bu dars oldin tugallangan. Qayta ishlash bilimni mustahkamlash uchun, ball qo‘shilmaydi.</p>';
+
+            testQismi.prepend(practiceInfo);
+        }
     }
 
     testniChiqar();
 }
-
 function testniChiqar() {
     const dars = joriyDarsniOl();
 
