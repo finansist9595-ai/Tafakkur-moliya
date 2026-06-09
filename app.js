@@ -998,7 +998,12 @@ function javobniTekshir(tanlanganIndeks, bosilganTugma) {
             natija.classList.add('togri-rang');
         }
 
-        if (!ballOldinBerilganmi(lessonId, testIndex)) {
+        if (joriyTestPracticeMode) {
+            if (natijaMatni) {
+                natijaMatni.textContent =
+                    '✅ To‘g‘ri! Practice mode: bu urinishda ball qo‘shilmaydi.';
+            }
+        } else if (!ballOldinBerilganmi(lessonId, testIndex)) {
             joriyBal += 10;
             joriyTestYangiBall += 10;
 
@@ -1011,7 +1016,8 @@ function javobniTekshir(tanlanganIndeks, bosilganTugma) {
             }
         } else {
             if (natijaMatni) {
-                natijaMatni.textContent = '✅ To‘g‘ri! Bu savol uchun ball oldin berilgan.';
+                natijaMatni.textContent =
+                    '✅ To‘g‘ri! Bu savol uchun ball oldin berilgan.';
             }
         }
     } else {
@@ -1031,7 +1037,6 @@ function javobniTekshir(tanlanganIndeks, bosilganTugma) {
 
     keyingiTestTugmasiniChiqar(dars);
 }
-
 
 // ====================================================
 // 19-QISM: KEYINGI TEST
