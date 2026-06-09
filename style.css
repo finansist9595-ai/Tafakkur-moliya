@@ -1035,3 +1035,27 @@ body {
     color: #6b7280;
     line-height: 1.4;
 }
+/* ========================================= */
+/* DARSNI QAYTA KO‘RISH TUGMASI              */
+/* ========================================= */
+
+.qayta-korish-yak-btn {
+    width: 100%;
+    padding: 14px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #ffffff;
+    background: linear-gradient(135deg, #0f766e, #14b8a6);
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.qayta-korish-yak-btn:hover {
+    opacity: 0.95;
+}
+
+.qayta-korish-yak-btn:active {
+    transform: scale(0.98);
+}
