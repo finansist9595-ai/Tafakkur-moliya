@@ -190,6 +190,8 @@ function testQisminiTikla() {
    if (dars && dars.id) {
     darsniTugallanganQil(dars.id);
    }
+
+    progressKartaniYangila();
     
     testQismi.innerHTML = `
         <p id="test-raqam">Test 1 / 3</p>
