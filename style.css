@@ -1528,3 +1528,33 @@ body {
 .recommend-btn:active {
     transform: scale(0.98);
 }
+/* ========================================= */
+/* 122-AMAL: DARS YAKUNI ASOSIY XULOSA       */
+/* ========================================= */
+
+.dars-xulosa-karta {
+    margin: 16px 0;
+    padding: 14px;
+    text-align: left;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #ecfdf5, #ffffff);
+    border: 1px solid #bbf7d0;
+    box-shadow: 0 8px 18px rgba(22, 101, 52, 0.08);
+}
+
+.dars-xulosa-karta span {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 800;
+    color: #047857;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 7px;
+}
+
+.dars-xulosa-karta p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #1f2937;
+}
