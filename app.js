@@ -118,6 +118,9 @@ function joriyDarsniOl() {
     return darslarRoyxati[joriyDarsIndeksi] || null;
 }
 
+function darsPracticeModemi(dars) {
+    return !!(dars && dars.id && darsTugallanganmi(dars.id));
+}
 
 // ====================================================
 // 6-QISM: OXIRGI O‘QILGAN DARSNI SAQLASH
