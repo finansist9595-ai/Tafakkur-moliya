@@ -879,3 +879,60 @@ body {
     font-weight: 600;
     color: #047857;
 }
+/* ========================================= */
+/* MENING PROGRESSIM KARTASI                 */
+/* ========================================= */
+
+.progress-karta {
+    background: linear-gradient(135deg, #f0faf4, #ffffff);
+    border: 1px solid #b7e4c7;
+}
+
+.progress-karta-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.progress-karta-header h3 {
+    margin: 0;
+    font-size: 15px;
+    color: #1b4332;
+}
+
+#progress-status {
+    font-size: 12px;
+    font-weight: 700;
+    color: #047857;
+    background: rgba(16, 185, 129, 0.12);
+    padding: 5px 10px;
+    border-radius: 999px;
+    white-space: nowrap;
+}
+
+.progress-stat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.progress-stat {
+    background: #ffffff;
+    border: 1px solid #e8f5e9;
+    border-radius: 12px;
+    padding: 12px;
+}
+
+.progress-stat-label {
+    display: block;
+    font-size: 11px;
+    color: #6b7280;
+    margin-bottom: 6px;
+}
+
+.progress-stat strong {
+    font-size: 15px;
+    color: #1b4332;
+}
