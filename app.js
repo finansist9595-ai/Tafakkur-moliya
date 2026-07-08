@@ -259,6 +259,237 @@ function tugallanganDarslarSoni() {
 
 
 // ====================================================
+// 8.1-QISM: DARS "JARAYONDA" HOLATINI SAQLASH (AMAL 126)
+// Dars ochilganda "jarayonda", test tugatilganda
+// "jarayonda"dan chiqib "tugallangan" bo‘ladi.
+// ====================================================
+
+function jarayondaKalit() {
+    return 'tafakkur_inprogress_lessons_' + foydalanuvchiId;
+}
+
+function jarayondaDarslarniYukla() {
+    const saqlangan = localStorage.getItem(jarayondaKalit());
+
+    try {
+        const royxat = JSON.parse(saqlangan || '[]');
+        return Array.isArray(royxat) ? royxat : [];
+    } catch (e) {
+        return [];
+    }
+}
+
+function jarayondaDarslarniSaqla(royxat) {
+    localStorage.setItem(jarayondaKalit(), JSON.stringify(royxat));
+}
+
+function darsJarayondami(lessonId) {
+    if (!lessonId) return false;
+    return jarayondaDarslarniYukla().includes(String(lessonId));
+}
+
+function darsniJarayondaQil(lessonId) {
+    // Tugallangan darsni "jarayonda"ga qaytarib bo‘lmaydi
+    if (!lessonId || darsTugallanganmi(lessonId)) return;
+
+    const royxat = jarayondaDarslarniYukla();
+    const id = String(lessonId);
+
+    if (!royxat.includes(id)) {
+        royxat.push(id);
+        jarayondaDarslarniSaqla(royxat);
+    }
+}
+
+function darsniJarayondanChiqar(lessonId) {
+    if (!lessonId) return;
+
+    const royxat = jarayondaDarslarniYukla().filter(function (id) {
+        return id !== String(lessonId);
+    });
+
+    jarayondaDarslarniSaqla(royxat);
+}
+
+
+// ====================================================
+// 8.2-QISM: XATO SAVOLLAR RO'YXATI (AMAL 127)
+// Har bir darsda notog'ri javob berilgan test savollari
+// saqlanadi: { lessonId: [testIndex, ...] }.
+// To'g'ri javob qayta berilsa, ro'yxatdan chiqariladi.
+// ====================================================
+
+function xatoKalit() {
+    return 'tafakkur_wrong_' + foydalanuvchiId;
+}
+
+function xatoSavollarniYukla() {
+    const saqlangan = localStorage.getItem(xatoKalit());
+
+    try {
+        const obyekt = JSON.parse(saqlangan || '{}');
+        return (obyekt && typeof obyekt === 'object' && !Array.isArray(obyekt))
+            ? obyekt
+            : {};
+    } catch (e) {
+        return {};
+    }
+}
+
+function xatoSavollarniSaqla(obyekt) {
+    localStorage.setItem(xatoKalit(), JSON.stringify(obyekt));
+}
+
+function xatoSavolniSaqla(lessonId, testIndex) {
+    if (!lessonId) return;
+
+    const royxat = xatoSavollarniYukla();
+    const kalit = String(lessonId);
+    const indeks = Number(testIndex);
+
+    if (!Array.isArray(royxat[kalit])) {
+        royxat[kalit] = [];
+    }
+
+    if (!royxat[kalit].includes(indeks)) {
+        royxat[kalit].push(indeks);
+        xatoSavollarniSaqla(royxat);
+    }
+
+    xatolarimBadgeniYangila();
+}
+
+function xatoSavolniOlibTashla(lessonId, testIndex) {
+    if (!lessonId) return;
+
+    const royxat = xatoSavollarniYukla();
+    const kalit = String(lessonId);
+    const indeks = Number(testIndex);
+
+    if (!Array.isArray(royxat[kalit])) return;
+
+    const yangiRoyxat = royxat[kalit].filter(function (i) {
+        return i !== indeks;
+    });
+
+    if (yangiRoyxat.length === 0) {
+        delete royxat[kalit];
+    } else {
+        royxat[kalit] = yangiRoyxat;
+    }
+
+    xatoSavollarniSaqla(royxat);
+    xatolarimBadgeniYangila();
+}
+
+function xatoSavollarSoni() {
+    const royxat = xatoSavollarniYukla();
+
+    return Object.keys(royxat).reduce(function (jami, kalit) {
+        return jami + royxat[kalit].length;
+    }, 0);
+}
+
+function xatolarimBadgeniYangila() {
+    const tugma = element('xatolarim-toggle-btn');
+
+    if (!tugma) return;
+
+    const soni = xatoSavollarSoni();
+
+    tugma.textContent = soni > 0
+        ? '🧠 Xato savollarim (' + soni + ')'
+        : '🧠 Xato savollarim';
+}
+
+function xatoSavollarRoyxatiniChiqar() {
+    const konteyner = element('xatolarim-royxati');
+
+    if (!konteyner) return;
+
+    const royxat = xatoSavollarniYukla();
+    const lessonIdlar = Object.keys(royxat);
+
+    if (lessonIdlar.length === 0) {
+        konteyner.innerHTML =
+            '<p class="xatolarim-bosh-xabar">🎉 Hozircha xato savollaringiz yo‘q!</p>';
+        return;
+    }
+
+    let html = '';
+
+    lessonIdlar.forEach(function (lessonId) {
+        const dars = darslarRoyxati.find(function (d) {
+            return d && String(d.id) === lessonId;
+        });
+
+        if (!dars || !Array.isArray(dars.testlar)) return;
+
+        const testIndekslar = royxat[lessonId];
+
+        testIndekslar.forEach(function (testIndex) {
+            const test = dars.testlar[testIndex];
+
+            if (!test) return;
+
+            html += '' +
+                '<button type="button" class="xato-savol-karta" onclick="xatoSavolgaOt(\'' + lessonId + '\')">' +
+                    '<span class="xato-savol-dars">' +
+                        xavfsizMatn(dars.emoji, '📘') + ' ' + xavfsizMatn(dars.mavzu, 'Dars') +
+                    '</span>' +
+                    '<span class="xato-savol-matni">' +
+                        xavfsizMatn(test.savol, '') +
+                    '</span>' +
+                    '<span class="xato-savol-link">Qayta ishlash ➡️</span>' +
+                '</button>';
+        });
+    });
+
+    konteyner.innerHTML = html || '<p class="xatolarim-bosh-xabar">🎉 Hozircha xato savollaringiz yo‘q!</p>';
+}
+
+function xatolarimniOchYop() {
+    const ichki = element('xatolarim-ichki');
+
+    if (!ichki) return;
+
+    if (ichki.classList.contains('hidden')) {
+        xatoSavollarRoyxatiniChiqar();
+        ichki.classList.remove('hidden');
+    } else {
+        ichki.classList.add('hidden');
+    }
+}
+
+function xatoSavolgaOt(lessonId) {
+    const indeks = darslarRoyxati.findIndex(function (d) {
+        return d && String(d.id) === String(lessonId);
+    });
+
+    if (indeks === -1) return;
+
+    const xatolarimIchki = element('xatolarim-ichki');
+    if (xatolarimIchki) {
+        xatolarimIchki.classList.add('hidden');
+    }
+
+    const katalog = element('darslar-katalogi');
+    if (katalog) {
+        katalog.classList.add('hidden');
+    }
+
+    joriyDarsIndeksi = indeks;
+    darsniChiqar();
+    testniBoshlash();
+
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+}
+
+
+// ====================================================
 // 9-QISM: PROGRESS KARTANI YANGILASH
 // ====================================================
 
@@ -506,6 +737,11 @@ function darsniChiqar() {
 
     oxirgiDarsniSaqla(joriyDarsIndeksi);
 
+    // Dars ochilganda, agar hali tugallanmagan bo'lsa, "jarayonda" deb belgilaymiz (Amal 126)
+    if (dars.id) {
+        darsniJarayondaQil(dars.id);
+    }
+
     const darsRaqam = element('dars-raqam');
     const darsSarlavha = element('dars-sarlavha');
     const darsMatni = element('dars-matni');
@@ -519,16 +755,25 @@ function darsniChiqar() {
             ? Math.round((tugallanganSoni / darslarRoyxati.length) * 100)
             : 0;
 
-        const darsHolati = dars.id && darsTugallanganmi(dars.id)
-            ? '✅ Tugallangan'
-            : '⏳ Jarayonda';
+        let darsHolati, darsHolatKlassi;
+
+        if (dars.id && darsTugallanganmi(dars.id)) {
+            darsHolati = '✅ Tugallangan';
+            darsHolatKlassi = 'holat-tugallangan';
+        } else if (dars.id && darsJarayondami(dars.id)) {
+            darsHolati = '🔄 Jarayonda';
+            darsHolatKlassi = 'holat-jarayonda';
+        } else {
+            darsHolati = '⏳ Boshlanmagan';
+            darsHolatKlassi = 'holat-boshlanmagan';
+        }
 
         darsRaqam.innerHTML = `
             <span class="dars-meta-qator">
                 ${joriyDarsIndeksi + 1}-DARS
             </span>
 
-            <span class="dars-holat">
+            <span class="dars-holat ${darsHolatKlassi}">
                 ${darsHolati}
             </span>
 
@@ -753,7 +998,6 @@ function katalogniChiqar() {
         const modulFoiz = modulJami > 0
             ? Math.round((modulTugallangan / modulJami) * 100)
             : 0;
-
         modulHeader.innerHTML = `
             <div class="katalog-modul-title-row">
                 <span class="katalog-modul-nomi">
@@ -789,12 +1033,22 @@ function katalogniChiqar() {
             }
 
             const tugallangan = dars.id && darsTugallanganmi(dars.id);
+            const jarayonda = !tugallangan && dars.id && darsJarayondami(dars.id);
+
+            let statusMatni, statusKlassi;
 
             if (tugallangan) {
+                statusMatni = '✅ Tugallangan';
+                statusKlassi = 'status-tugallangan';
                 tugma.classList.add('tugallangan-katalog-dars');
+            } else if (jarayonda) {
+                statusMatni = '🔄 Jarayonda';
+                statusKlassi = 'status-jarayonda';
+                tugma.classList.add('jarayonda-katalog-dars');
+            } else {
+                statusMatni = '⏳ Boshlanmagan';
+                statusKlassi = 'status-boshlanmagan';
             }
-
-            const statusMatni = tugallangan ? '✅ Tugallangan' : '⏳ Boshlanmagan';
 
             tugma.innerHTML = `
                 <span class="katalog-dars-raqam">${indeks + 1}-dars</span>
@@ -807,7 +1061,7 @@ function katalogniChiqar() {
                     ${darajaNominiOl(dars.level)}
                 </span>
 
-                <span class="katalog-dars-status">
+                <span class="katalog-dars-status ${statusKlassi}">
                     ${statusMatni}
                 </span>
             `;
@@ -1031,6 +1285,10 @@ function javobniTekshir(tanlanganIndeks, bosilganTugma) {
     if (tanlanganIndeks === togriIndeks) {
         joriyTestTogriSoni++;
 
+        // Agar bu savol oldin "Xatolarim" ro'yxatida bo'lsa, endi to'g'ri
+        // javob berilgani uchun ro'yxatdan chiqariladi (Amal 127)
+        xatoSavolniOlibTashla(lessonId, testIndex);
+
         if (bosilganTugma) {
             bosilganTugma.classList.add('togri-javob');
         }
@@ -1062,6 +1320,9 @@ function javobniTekshir(tanlanganIndeks, bosilganTugma) {
             }
         }
     } else {
+        // Noto'g'ri javob berilgan savol "Xatolarim" ro'yxatiga saqlanadi (Amal 127)
+        xatoSavolniSaqla(lessonId, testIndex);
+
         if (bosilganTugma) {
             bosilganTugma.classList.add('notogri-javob');
         }
@@ -1186,6 +1447,7 @@ function darsYakunlandi() {
 
     if (dars && dars.id) {
         darsniTugallanganQil(dars.id);
+        darsniJarayondanChiqar(dars.id);
     }
 
     progressKartaniYangila();
@@ -1500,6 +1762,7 @@ function ilovaniIshgaTushir() {
 
     balniChiqar();
     darsniChiqar();
+    xatolarimBadgeniYangila();
     showTab('talim');
 }
 
@@ -1521,6 +1784,8 @@ window.kataloggaQaytishYakundan = kataloggaQaytishYakundan;
 window.darsniQaytaKorish = darsniQaytaKorish;
 window.havolaNusxala = havolaNusxala;
 window.telegramUlash = telegramUlash;
+window.xatolarimniOchYop = xatolarimniOchYop;
+window.xatoSavolgaOt = xatoSavolgaOt;
 
 
 document.addEventListener('DOMContentLoaded', ilovaniIshgaTushir);
