@@ -1067,3 +1067,70 @@ Bu case barcha o'rganilgan tushunchalarni birlashtirib, amaliy hayot rejasiga ta
     ]
   }
 ]; // darslar massivi tugadi
+
+
+// ====================================================
+// MODUL YAKUNIY TESTLARI (AMAL 128)
+// Har bir modul tugagach ko'rsatiladigan qisqa yakuniy
+// test. Savollar shu modul darslarining tasdiqlangan
+// test bankidan tanlab olingan (yangi da'vo qo'shilmagan).
+// ====================================================
+
+const modulYakuniyTestlar = {
+    module_01: [
+        {
+            savol: 'Islom moliyasining asosiy tamoyili qaysi?',
+            javoblar: [
+                'Foiz stavkasini oshirish',
+                'Shariat tamoyillariga asoslanish',
+                'Faqat bank operatsiyalari bilan shug\'ullanish',
+                'Davlat tomonidan boshqarilish'
+            ],
+            togri: 1
+        },
+        {
+            savol: '"Ribo" so\'zining asosiy ma\'nosi nima?',
+            javoblar: [
+                'Savdo shartnomasi',
+                'Ortiqcha o\'sish yoki qo\'shimcha',
+                'Investitsiya fondasi',
+                'Budjet rejasi'
+            ],
+            togri: 1
+        },
+        {
+            savol: 'Islom moliyasida savdodan foyda olish haqida qanday fikr mavjud?',
+            javoblar: [
+                'Taqiqlangan, chunki u ribo hisoblanadi',
+                'Ruxsat etilgan, chunki haqiqiy qiymat yaratiladi',
+                'Faqat xorijiy savdoda ruxsat etilgan',
+                'Faqat davlat kompaniyalariga ruxsat etilgan'
+            ],
+            togri: 1
+        },
+        {
+            savol: 'Islom moliyasida moliyaviy operatsiyalar nimaga bog\'liq bo\'lishi kerak?',
+            javoblar: [
+                'Faqat davlat kafolatiga',
+                'Real aktiv yoki haqiqiy iqtisodiy faoliyatga',
+                'Xorijiy valyuta kursiga',
+                'Bank reytingiga'
+            ],
+            togri: 1
+        },
+        {
+            savol: 'Islom moliyasida "ribo" deb nima ataladi?',
+            javoblar: [
+                'Savdo foydasi',
+                'Xizmat haqi',
+                'Foiz yoki ortiqcha ustama',
+                'Investitsiya daromadi'
+            ],
+            togri: 2
+        }
+    ]
+
+    // module_02 – module_08 uchun savollar keyinroq shu tuzilma
+    // bo'yicha qo'shiladi (har biri kamida 5 ta savol,
+    // tegishli modul darslarining test bankidan tanlab olingan).
+};
