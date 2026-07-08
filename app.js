@@ -998,6 +998,7 @@ function katalogniChiqar() {
         const modulFoiz = modulJami > 0
             ? Math.round((modulTugallangan / modulJami) * 100)
             : 0;
+
         modulHeader.innerHTML = `
             <div class="katalog-modul-title-row">
                 <span class="katalog-modul-nomi">
@@ -1464,6 +1465,7 @@ function darsYakunlandi() {
 
     const darsXulosasi = darsXulosasiniOl(dars);
     const modulTabrik = modulTabrikHtml(dars);
+    const modulTestTaklifi = modulYakuniyTestTugmasiHtml(dars);
 
     testQismi.classList.remove('hidden');
 
@@ -1474,6 +1476,7 @@ function darsYakunlandi() {
             '<p>Siz bu darsni muvaffaqiyatli yakunladingiz.</p>' +
 
             modulTabrik +
+            modulTestTaklifi +
 
             '<div class="dars-xulosa-karta">' +
                 '<span>Asosiy xulosa</span>' +
@@ -1510,6 +1513,301 @@ function darsYakunlandi() {
         });
     }, 100);
 }
+
+// ====================================================
+// 21-QISM: MODUL YAKUNIY TESTI (AMAL 128)
+// Modul barcha darslari tugallangach, ixtiyoriy yakuniy
+// test taklif qilinadi (majburiy emas, o'tib ketish mumkin).
+// ====================================================
+
+let joriyModulTestModuleId = null;
+let joriyModulTestIndeksi = 0;
+let joriyModulTestJavobBerildi = false;
+let joriyModulTestTogriSoni = 0;
+
+function modulTestKaliti() {
+    return 'tafakkur_modul_test_' + foydalanuvchiId;
+}
+
+function modulTestlariniYukla() {
+    const saqlangan = localStorage.getItem(modulTestKaliti());
+
+    try {
+        const royxat = JSON.parse(saqlangan || '[]');
+        return Array.isArray(royxat) ? royxat : [];
+    } catch (e) {
+        return [];
+    }
+}
+
+function modulTestlariniSaqla(royxat) {
+    localStorage.setItem(modulTestKaliti(), JSON.stringify(royxat));
+}
+
+function modulTestiTugallanganmi(moduleId) {
+    if (!moduleId) return false;
+    return modulTestlariniYukla().includes(moduleId);
+}
+
+function modulTestiniTugallanganQil(moduleId) {
+    if (!moduleId) return;
+
+    const royxat = modulTestlariniYukla();
+
+    if (!royxat.includes(moduleId)) {
+        royxat.push(moduleId);
+        modulTestlariniSaqla(royxat);
+    }
+}
+
+function modulYakuniyTestiMavjudmi(moduleId) {
+    return !!(
+        typeof modulYakuniyTestlar !== 'undefined' &&
+        Array.isArray(modulYakuniyTestlar[moduleId]) &&
+        modulYakuniyTestlar[moduleId].length > 0
+    );
+}
+
+function modulYakuniyTestTugmasiHtml(dars) {
+    if (!dars || !dars.module_id) return '';
+    if (!modulTugallanganmi(dars.module_id)) return '';
+    if (!modulYakuniyTestiMavjudmi(dars.module_id)) return '';
+    if (modulTestiTugallanganmi(dars.module_id)) return '';
+
+    return '' +
+        '<div class="modul-test-taklif-karta">' +
+            '<p>Bu modul bo‘yicha bilimingizni mustahkamlash uchun qisqa yakuniy test mavjud.</p>' +
+            '<button type="button" class="modul-test-taklif-btn" onclick="modulTestniBoshlash(\'' + dars.module_id + '\')">' +
+                '🎓 Modul yakuniy testini boshlash' +
+            '</button>' +
+        '</div>';
+}
+
+function modulTestniBoshlash(moduleId) {
+    const savollar = (typeof modulYakuniyTestlar !== 'undefined') ? modulYakuniyTestlar[moduleId] : null;
+
+    if (!Array.isArray(savollar) || savollar.length === 0) return;
+
+    joriyModulTestModuleId = moduleId;
+    joriyModulTestIndeksi = 0;
+    joriyModulTestTogriSoni = 0;
+    joriyModulTestJavobBerildi = false;
+
+    const testQismi = element('test-qismi');
+    if (!testQismi) return;
+
+    testQisminiTikla();
+    testQismi.classList.remove('hidden');
+
+    modulTestniChiqar();
+
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+}
+
+function modulTestniChiqar() {
+    const savollar = modulYakuniyTestlar[joriyModulTestModuleId];
+
+    if (!Array.isArray(savollar)) return;
+
+    const test = savollar[joriyModulTestIndeksi];
+
+    if (!test) return;
+
+    joriyModulTestJavobBerildi = false;
+
+    const eskiBtn = element('keyingi-test-btn');
+    if (eskiBtn) {
+        eskiBtn.remove();
+    }
+
+    const testRaqam = element('test-raqam');
+    const testSavol = element('test-savol');
+    const testJavoblar = element('test-javoblar');
+    const testNatija = element('test-natija');
+
+    if (testRaqam) {
+        testRaqam.textContent =
+            '🎓 Modul testi ' + (joriyModulTestIndeksi + 1) + ' / ' + savollar.length;
+    }
+
+    if (testSavol) {
+        testSavol.textContent = xavfsizMatn(test.savol, 'Savol kiritilmagan.');
+    }
+
+    if (testNatija) {
+        testNatija.classList.add('hidden');
+        testNatija.classList.remove('togri-rang', 'notogri-rang');
+    }
+
+    if (!testJavoblar) return;
+
+    testJavoblar.innerHTML = '';
+
+    const javoblar = Array.isArray(test.javoblar) ? test.javoblar : [];
+
+    javoblar.forEach(function (javobMatni, indeks) {
+        const tugma = document.createElement('button');
+        tugma.type = 'button';
+        tugma.className = 'javob-tugma';
+        tugma.textContent = (indeks + 1) + '. ' + javobMatni;
+
+        tugma.addEventListener('click', function () {
+            modulJavobniTekshir(indeks, tugma);
+        });
+
+        testJavoblar.appendChild(tugma);
+    });
+}
+
+function modulJavobniTekshir(tanlanganIndeks, bosilganTugma) {
+    if (joriyModulTestJavobBerildi) return;
+
+    joriyModulTestJavobBerildi = true;
+
+    const savollar = modulYakuniyTestlar[joriyModulTestModuleId];
+
+    if (!Array.isArray(savollar)) return;
+
+    const test = savollar[joriyModulTestIndeksi];
+
+    if (!test) return;
+
+    const togriIndeks = Number(test.togri);
+
+    const barchaTugmalar = document.querySelectorAll('.javob-tugma');
+    barchaTugmalar.forEach(function (tugma) {
+        tugma.disabled = true;
+    });
+
+    if (barchaTugmalar[togriIndeks]) {
+        barchaTugmalar[togriIndeks].classList.add('togri-javob');
+    }
+
+    const natija = element('test-natija');
+    const natijaMatni = element('test-natija-matni');
+
+    if (natija) {
+        natija.classList.remove('hidden');
+        natija.classList.remove('togri-rang', 'notogri-rang');
+    }
+
+    if (tanlanganIndeks === togriIndeks) {
+        joriyModulTestTogriSoni++;
+
+        if (bosilganTugma) {
+            bosilganTugma.classList.add('togri-javob');
+        }
+
+        if (natija) {
+            natija.classList.add('togri-rang');
+        }
+
+        if (natijaMatni) {
+            natijaMatni.textContent = '✅ To‘g‘ri!';
+        }
+    } else {
+        if (bosilganTugma) {
+            bosilganTugma.classList.add('notogri-javob');
+        }
+
+        if (natija) {
+            natija.classList.add('notogri-rang');
+        }
+
+        if (natijaMatni) {
+            natijaMatni.textContent =
+                '❌ Noto‘g‘ri. To‘g‘ri javob yashil bilan ko‘rsatildi.';
+        }
+    }
+
+    const eskiKeyingiBtn = element('keyingi-test-btn');
+    if (eskiKeyingiBtn) {
+        eskiKeyingiBtn.remove();
+    }
+
+    const keyingiBtn = document.createElement('button');
+    keyingiBtn.type = 'button';
+    keyingiBtn.id = 'keyingi-test-btn';
+
+    const oxirgiSavolmi = joriyModulTestIndeksi >= savollar.length - 1;
+    keyingiBtn.textContent = oxirgiSavolmi ? 'Natijani ko‘rish 🏁' : 'Keyingi savol ➡️';
+
+    keyingiBtn.addEventListener('click', function () {
+        modulKeyingiTest();
+    });
+
+    if (natija && natija.parentNode) {
+        natija.parentNode.insertBefore(keyingiBtn, natija.nextSibling);
+    }
+}
+
+function modulKeyingiTest() {
+    const savollar = modulYakuniyTestlar[joriyModulTestModuleId];
+
+    if (!Array.isArray(savollar)) return;
+
+    if (joriyModulTestIndeksi >= savollar.length - 1) {
+        modulTestYakunlandi();
+        return;
+    }
+
+    joriyModulTestIndeksi++;
+    modulTestniChiqar();
+}
+
+function modulTestYakunlandi() {
+    const testQismi = element('test-qismi');
+
+    if (!testQismi) return;
+
+    const moduleId = joriyModulTestModuleId;
+    const savollar = modulYakuniyTestlar[moduleId] || [];
+    const jamiSavollar = savollar.length;
+
+    modulTestiniTugallanganQil(moduleId);
+
+    const natijaFoizi = jamiSavollar > 0
+        ? Math.round((joriyModulTestTogriSoni / jamiSavollar) * 100)
+        : 0;
+
+    testQismi.classList.remove('hidden');
+
+    testQismi.innerHTML =
+        '<div class="yakunlash-xabar">' +
+            '<div class="yakunlash-emoji">🏅</div>' +
+            '<h3>Modul yakuniy testi tugallandi!</h3>' +
+            '<p>' + modulNominiOl(moduleId) + ' bo‘yicha natijangiz:</p>' +
+
+            '<div class="test-stat-karta">' +
+                '<p><strong>Natija:</strong> ' + joriyModulTestTogriSoni + ' / ' + jamiSavollar + ' ta to‘g‘ri</p>' +
+                '<p><strong>Foiz:</strong> ' + natijaFoizi + '%</p>' +
+            '</div>' +
+
+            '<div class="yakunlash-actions">' +
+                '<button type="button" class="keyingi-dars-yak-btn" onclick="modulTestdanChiqish()">▶️ Davom etish</button>' +
+            '</div>' +
+        '</div>';
+
+    setTimeout(function () {
+        testQismi.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+        });
+    }, 100);
+}
+
+function modulTestdanChiqish() {
+    darsniChiqar();
+
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+}
+
 
 function keyingiDarsYakundan() {
     if (joriyDarsIndeksi < darslarRoyxati.length - 1) {
@@ -1786,6 +2084,8 @@ window.havolaNusxala = havolaNusxala;
 window.telegramUlash = telegramUlash;
 window.xatolarimniOchYop = xatolarimniOchYop;
 window.xatoSavolgaOt = xatoSavolgaOt;
+window.modulTestniBoshlash = modulTestniBoshlash;
+window.modulTestdanChiqish = modulTestdanChiqish;
 
 
 document.addEventListener('DOMContentLoaded', ilovaniIshgaTushir);
