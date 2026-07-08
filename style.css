@@ -867,9 +867,31 @@ body {
     margin-bottom: 10px;
 }
 
+/* Amal 126 — dars-holat uchun 3 xil rang */
+.dars-holat.holat-tugallangan {
+    background: rgba(16, 185, 129, 0.12);
+    color: #047857;
+}
+
+.dars-holat.holat-jarayonda {
+    background: rgba(245, 158, 11, 0.14);
+    color: #b45309;
+}
+
+.dars-holat.holat-boshlanmagan {
+    background: rgba(107, 114, 128, 0.12);
+    color: #4b5563;
+}
+
 .tugallangan-katalog-dars {
     border-color: #10b981;
     background: #ecfdf5;
+}
+
+/* Amal 126 — katalogda "jarayonda" darsning kartasi */
+.jarayonda-katalog-dars {
+    border-color: #f59e0b;
+    background: #fffbeb;
 }
 
 .katalog-dars-status {
@@ -879,6 +901,110 @@ body {
     font-weight: 600;
     color: #047857;
 }
+
+/* Amal 126 — katalog-dars-status uchun 3 xil rang */
+.katalog-dars-status.status-tugallangan {
+    color: #047857;
+}
+
+.katalog-dars-status.status-jarayonda {
+    color: #b45309;
+}
+
+.katalog-dars-status.status-boshlanmagan {
+    color: #6b7280;
+}
+
+/* ========================================= */
+/* XATO SAVOLLAR RO'YXATI (AMAL 127)         */
+/* ========================================= */
+
+#xatolarim-bloki {
+    margin-bottom: 14px;
+}
+
+#xatolarim-toggle-btn {
+    width: 100%;
+    padding: 13px 16px;
+    border: 1px solid #fecdd3;
+    border-radius: 12px;
+    background: #fff1f2;
+    color: #9f1239;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+#xatolarim-toggle-btn:active {
+    transform: scale(0.98);
+}
+
+#xatolarim-ichki {
+    margin-top: 12px;
+    padding: 12px;
+    border-radius: 14px;
+    background: #fffafa;
+    border: 1px solid #ffe4e6;
+}
+
+.xato-savol-karta {
+    width: 100%;
+    display: block;
+    text-align: left;
+    padding: 12px 13px;
+    margin-bottom: 9px;
+    border-radius: 12px;
+    border: 1px solid #fecdd3;
+    background: #ffffff;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.xato-savol-karta:last-child {
+    margin-bottom: 0;
+}
+
+.xato-savol-karta:hover {
+    background: #fff1f2;
+    border-color: #9f1239;
+}
+
+.xato-savol-karta:active {
+    transform: scale(0.98);
+}
+
+.xato-savol-dars {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    color: #be123c;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+
+.xato-savol-matni {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1a1a2e;
+    margin-bottom: 6px;
+    line-height: 1.4;
+}
+
+.xato-savol-link {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    color: #9f1239;
+}
+
+.xatolarim-bosh-xabar {
+    text-align: center;
+    font-size: 13px;
+    color: #4b5563;
+    padding: 10px 4px;
+}
+
 /* ========================================= */
 /* MENING PROGRESSIM KARTASI                 */
 /* ========================================= */
@@ -1194,6 +1320,10 @@ body {
 
 .tugallangan-katalog-dars {
     background: linear-gradient(135deg, #f0fdf4, #ffffff);
+}
+
+.jarayonda-katalog-dars {
+    background: linear-gradient(135deg, #fffbeb, #ffffff);
 }
 
 /* Test natijasi kartasi */
