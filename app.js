@@ -1466,6 +1466,7 @@ function darsYakunlandi() {
     const darsXulosasi = darsXulosasiniOl(dars);
     const modulTabrik = modulTabrikHtml(dars);
     const modulTestTaklifi = modulYakuniyTestTugmasiHtml(dars);
+    const kursYakuniTaklifi = kursYakuniTaklifHtml();
 
     testQismi.classList.remove('hidden');
 
@@ -1477,6 +1478,7 @@ function darsYakunlandi() {
 
             modulTabrik +
             modulTestTaklifi +
+            kursYakuniTaklifi +
 
             '<div class="dars-xulosa-karta">' +
                 '<span>Asosiy xulosa</span>' +
@@ -2046,6 +2048,254 @@ function telegramUlash() {
 
 
 // ====================================================
+// 22-QISM: KURS YAKUNI VA SERTIFIKAT (AMAL 129)
+// Barcha darslar tugallanganda sertifikat taklif qilinadi.
+// Ism foydalanuvchi tomonidan qo'lda kiritiladi.
+// ====================================================
+
+function sertifikatIsmKaliti() {
+    return 'tafakkur_certificate_name_' + foydalanuvchiId;
+}
+
+function sertifikatSanaKaliti() {
+    return 'tafakkur_certificate_date_' + foydalanuvchiId;
+}
+
+function sertifikatIsminiYukla() {
+    return localStorage.getItem(sertifikatIsmKaliti()) || '';
+}
+
+function sertifikatIsminiSaqla(ism) {
+    localStorage.setItem(sertifikatIsmKaliti(), ism);
+}
+
+function yangiSanaMatni() {
+    const bugun = new Date();
+    const oylar = [
+        'yanvar', 'fevral', 'mart', 'aprel', 'may', 'iyun',
+        'iyul', 'avgust', 'sentyabr', 'oktyabr', 'noyabr', 'dekabr'
+    ];
+
+    return bugun.getDate() + '-' + oylar[bugun.getMonth()] + ', ' + bugun.getFullYear();
+}
+
+function sertifikatSanasiniYukla() {
+    let sana = localStorage.getItem(sertifikatSanaKaliti());
+
+    if (!sana) {
+        sana = yangiSanaMatni();
+        localStorage.setItem(sertifikatSanaKaliti(), sana);
+    }
+
+    return sana;
+}
+
+function kursToliqYakunlandimi() {
+    return darslarRoyxati.length > 0 &&
+        tugallanganDarslarSoni() === darslarRoyxati.length;
+}
+
+function kursYakuniTaklifHtml() {
+    if (!kursToliqYakunlandimi()) return '';
+
+    return '' +
+        '<div class="kurs-yakun-taklif-karta">' +
+            '<div class="kurs-yakun-emoji">🎓</div>' +
+            '<strong>Tabriklaymiz! Butun kurs yakunlandi!</strong>' +
+            '<p>Siz barcha ' + darslarRoyxati.length + ' ta darsni muvaffaqiyatli tugalladingiz. Endi shaxsiy sertifikatingizni olishingiz mumkin.</p>' +
+            '<button type="button" class="kurs-yakun-sertifikat-btn" onclick="sertifikatniKorsat()">' +
+                '🏆 Sertifikatni ko‘rish' +
+            '</button>' +
+        '</div>';
+}
+
+function sertifikatniKorsat() {
+    const overlay = element('sertifikat-overlay');
+
+    if (!overlay) return;
+
+    const saqlanganIsm = sertifikatIsminiYukla();
+
+    if (!saqlanganIsm) {
+        sertifikatIsmFormasiniChiqar();
+    } else {
+        sertifikatKartasiniChiqar(saqlanganIsm);
+    }
+
+    overlay.classList.remove('hidden');
+}
+
+function sertifikatniYopish() {
+    const overlay = element('sertifikat-overlay');
+
+    if (overlay) {
+        overlay.classList.add('hidden');
+    }
+}
+
+function sertifikatIsmFormasiniChiqar() {
+    const ichki = element('sertifikat-ichki');
+
+    if (!ichki) return;
+
+    ichki.innerHTML = '' +
+        '<div class="sertifikat-forma-karta">' +
+            '<button type="button" class="sertifikat-yopish-x" onclick="sertifikatniYopish()">✕</button>' +
+            '<div class="sertifikat-forma-emoji">🎓</div>' +
+            '<h3>Sertifikatingiz uchun ism-familiyangizni kiriting</h3>' +
+            '<input type="text" id="sertifikat-ism-input" class="sertifikat-ism-input" placeholder="Ism Familiya" maxlength="60">' +
+            '<button type="button" class="sertifikat-forma-btn" onclick="sertifikatIsminiTasdiqla()">Sertifikatni yaratish 🏆</button>' +
+        '</div>';
+
+    const inputEl = element('sertifikat-ism-input');
+
+    if (inputEl) {
+        inputEl.value = (foydalanuvchiIsmi && foydalanuvchiIsmi !== 'Mehmon') ? foydalanuvchiIsmi : '';
+
+        inputEl.addEventListener('keydown', function (hodisa) {
+            if (hodisa.key === 'Enter') {
+                sertifikatIsminiTasdiqla();
+            }
+        });
+
+        inputEl.focus();
+    }
+}
+
+function sertifikatIsminiTasdiqla() {
+    const inputEl = element('sertifikat-ism-input');
+
+    if (!inputEl) return;
+
+    const ism = inputEl.value.trim();
+
+    if (!ism) {
+        inputEl.classList.add('sertifikat-input-xato');
+        inputEl.focus();
+        return;
+    }
+
+    sertifikatIsminiSaqla(ism);
+    sertifikatKartasiniChiqar(ism);
+}
+
+function sertifikatKartasiniChiqar(ism) {
+    const ichki = element('sertifikat-ichki');
+
+    if (!ichki) return;
+
+    const sana = sertifikatSanasiniYukla();
+    const jamiDarslar = darslarRoyxati.length;
+
+    ichki.innerHTML = '' +
+        '<div class="sertifikat-karta">' +
+            '<button type="button" class="sertifikat-yopish-x" onclick="sertifikatniYopish()">✕</button>' +
+
+            '<div class="sertifikat-bezak-top">🕌</div>' +
+            '<span class="sertifikat-label">TAFAKKUR MOLIYA</span>' +
+            '<h2 class="sertifikat-sarlavha">Sertifikat</h2>' +
+
+            '<p class="sertifikat-matni">Ushbu sertifikat</p>' +
+            '<h3 class="sertifikat-ism">' + xavfsizMatn(ism) + '</h3>' +
+            '<p class="sertifikat-matni">ga Islom moliyasi va Smart Budgeting mini kursining barcha ' +
+                jamiDarslar + ' ta darsini muvaffaqiyatli yakunlagani uchun topshiriladi.</p>' +
+
+            '<div class="sertifikat-sana">📅 ' + xavfsizMatn(sana) + '</div>' +
+
+            '<div class="sertifikat-actions">' +
+                '<button type="button" class="sertifikat-ulash-btn" onclick="sertifikatniUlashish()">📤 Ulashish</button>' +
+                '<button type="button" class="sertifikat-nusxa-btn" onclick="sertifikatniNusxalash()">📋 Nusxalash</button>' +
+            '</div>' +
+
+            '<button type="button" class="sertifikat-ism-ozgartirish-btn" onclick="sertifikatIsmFormasiniChiqar()">✏️ Ismni o‘zgartirish</button>' +
+        '</div>';
+}
+
+function sertifikatMatniniOl() {
+    const ism = sertifikatIsminiYukla();
+    const sana = sertifikatSanasiniYukla();
+    const jamiDarslar = darslarRoyxati.length;
+
+    return '🎓 Sertifikat\n\n' +
+        ism + ' — Tafakkur Moliya "Islom moliyasi va Smart Budgeting" mini kursining barcha ' +
+        jamiDarslar + ' ta darsini muvaffaqiyatli yakunladi.\n\n' +
+        '📅 ' + sana;
+}
+
+function sertifikatniUlashish() {
+    const botNomi = 'TafakkurMoliyaBot';
+    const havola = 'https://t.me/' + botNomi;
+    const matn = sertifikatMatniniOl() + '\n\n👉 Kursni sinab ko‘ring: ' + havola;
+
+    const shareUrl =
+        'https://t.me/share/url?url=' +
+        encodeURIComponent(havola) +
+        '&text=' +
+        encodeURIComponent(matn);
+
+    if (tg && tg.openTelegramLink) {
+        tg.openTelegramLink(shareUrl);
+    } else {
+        window.open(shareUrl, '_blank');
+    }
+}
+
+function sertifikatniNusxalash() {
+    const matn = sertifikatMatniniOl();
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(matn).then(function () {
+            sertifikatXabarniKorsat('✅ Nusxalandi!');
+        }).catch(function () {
+            sertifikatEskiUsuldaNusxala(matn);
+        });
+    } else {
+        sertifikatEskiUsuldaNusxala(matn);
+    }
+}
+
+function sertifikatEskiUsuldaNusxala(matn) {
+    const vaqtinchaMaydon = document.createElement('textarea');
+    vaqtinchaMaydon.value = matn;
+    vaqtinchaMaydon.style.position = 'fixed';
+    vaqtinchaMaydon.style.opacity = '0';
+
+    document.body.appendChild(vaqtinchaMaydon);
+    vaqtinchaMaydon.select();
+
+    try {
+        document.execCommand('copy');
+        sertifikatXabarniKorsat('✅ Nusxalandi!');
+    } catch (e) {
+        sertifikatXabarniKorsat('❌ Nusxalab bo‘lmadi.');
+    }
+
+    vaqtinchaMaydon.remove();
+}
+
+function sertifikatXabarniKorsat(matn) {
+    const eskiXabar = element('sertifikat-mini-xabar');
+    if (eskiXabar) {
+        eskiXabar.remove();
+    }
+
+    const ichki = element('sertifikat-ichki');
+    if (!ichki) return;
+
+    const xabar = document.createElement('div');
+    xabar.id = 'sertifikat-mini-xabar';
+    xabar.className = 'sertifikat-mini-xabar';
+    xabar.textContent = matn;
+
+    ichki.appendChild(xabar);
+
+    setTimeout(function () {
+        xabar.remove();
+    }, 2200);
+}
+
+
+// ====================================================
 // 24-QISM: ILOVANI ISHGA TUSHIRISH
 // ====================================================
 
@@ -2086,6 +2336,12 @@ window.xatolarimniOchYop = xatolarimniOchYop;
 window.xatoSavolgaOt = xatoSavolgaOt;
 window.modulTestniBoshlash = modulTestniBoshlash;
 window.modulTestdanChiqish = modulTestdanChiqish;
+window.sertifikatniKorsat = sertifikatniKorsat;
+window.sertifikatniYopish = sertifikatniYopish;
+window.sertifikatIsminiTasdiqla = sertifikatIsminiTasdiqla;
+window.sertifikatIsmFormasiniChiqar = sertifikatIsmFormasiniChiqar;
+window.sertifikatniUlashish = sertifikatniUlashish;
+window.sertifikatniNusxalash = sertifikatniNusxalash;
 
 
 document.addEventListener('DOMContentLoaded', ilovaniIshgaTushir);
